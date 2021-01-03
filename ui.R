@@ -1,4 +1,10 @@
 
+library(shinydashboard)
+library(shinyFiles)
+library(data.table)
+library(shinyjs)
+library(rintrojs)
+library(shinyBS)
 
 ui <- dashboardPage(
   dashboardHeader(
@@ -18,7 +24,7 @@ ui <- dashboardPage(
           column(
             width = 4,
             box(
-              projectDetailsUI()
+              projectDetailsUI("Details of the project")
               )
           )
         )
@@ -32,7 +38,7 @@ ui <- dashboardPage(
             box(
               title = "Select the file locally",
               width = NULL,
-              fileIn())
+              fileIn("filein"))
           ),
           column(
             width = 8,
@@ -45,7 +51,7 @@ ui <- dashboardPage(
               tableOutput("previewtable")
               ),
            
-              readInParametersInput(),
+              readInParametersInput("read_in"),
             box(
               title = "Sample Annotation",
               solidHeader = TRUE,

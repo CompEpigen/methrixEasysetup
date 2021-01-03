@@ -1,18 +1,24 @@
 
 
-projectDetails <- function(id, label = "Details of the project"){
-  
+projectDetailsUI <- function(id, label = "Details of the project"){
+  ns <- NS(id)
   tagList(
+    shinyDirButton(
+      id = ns("projectDirectory"),
+      label = "Choose a directory",
+      FALSE,
+      buttonType = "btn btn-primary"
+    ),
     textInput(
-      inputId = "projectName",
+      inputId = ns("projectName"),
       label = "Name of the Project"
     ),
     textInput(
-      inputId = "authorName",
+      inputId = ns("authorName"),
       label = "Name of the author"
     ),
     actionButton(
-      inputId = "tab1Next",
+      inputId = ns("tab1Next"),
       label = "Next",
       icon = icon("arrow-right")
     )
