@@ -1,24 +1,11 @@
 
 
 server <-   function(input, output, session){
-    shinyjs::useShinyjs()
-    volumes = getVolumes()
-    observe({
-      shinyFileChoose(input, "btn", roots = volumes, session = session)
-      if(!is.null(input$btn)){
-        slctd_file<-parseFilePaths(volumes, input$btn)
-        direct<- renderText(as.character(slctd_file$datapath[1]))
-      }
-      observeEvent(input$pre,{
-        output$previewtable <- renderTable({
-          req(input$btn)
-          fread(direct(), header = input$header, sep = "\t", nrows = 5)
-        })
-        output$previewfilename <- renderText({
-          paste("Preview of the file: ",  as.character((basename(slctd_file$datapath[1]))))
-        })
-      })
-    })
+  
+  
+  bedgraphFilepathsServer("read_in")
+  codeGeneration("read_in")
+
     
     volumes = getVolumes()
     observe({ 
@@ -60,27 +47,16 @@ server <-   function(input, output, session){
     }
     )
     
+   
+    
     observeEvent(input$tab1Next,{
       updateTabsetPanel(session, 
                         "mES1",
                         selected = "readIn")
     })
     
-    dataCode <- codeGeneration("dataCode",
-                               readInParametersInput,
-                               projectDetailsUI,
-                               stringsAsFactors = TRUE)
+   
     
-    observeEvent(input$code,{
-      output$generatedCode <- renderText ({
-        dataCode()
-      })})
-    observeEvent(input$startWorkflowR,{
-    sink("analysis/read_in.Rmd")  
-    dataCode()
-    sink()
-    return(read_in.Rmd)
-    })
     
     
     

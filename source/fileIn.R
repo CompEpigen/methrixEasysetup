@@ -1,20 +1,21 @@
 
-fileIn <- function(input, output, session){
+fileIn <- function(id, label = "filein"){
   shinyjs::useShinyjs()
+  ns <- NS(id)
   tagList(
     shinyFilesButton(
-      "btn", 
+      ns("btn"), 
       "Please select the bedGraph files", 
       title = "Please select the bedGraph files:", 
       multiple = TRUE, 
       buttonType = "default", 
       class = NULL),
     checkboxInput(
-      inputId = "header",
+      inputId = ns("header"),
       label = "Header"
     ),
     actionButton(
-      inputId = "pre",
+      inputId = ns("pre"),
       label = "Preview the first bedGraph file"
     )
   )

@@ -1,11 +1,12 @@
 
 
-sampleAnnotationUI <- function(id){
+sampleAnnotationUI <- function(id, label = label){
   
+  ns <- NS(id)
   tagList(
     
     fileInput(
-      inputId = "sampleanno", 
+      inputId = ns("sampleanno"), 
       label = "Sample Annotation file",
       multiple = FALSE, 
       accept = ".csv", 
@@ -13,11 +14,11 @@ sampleAnnotationUI <- function(id){
     ),
     
     tableOutput(
-      outputId = "sampleannoTable"
+      outputId = ns("sampleannoTable")
     ),
     
     actionButton(
-      inputId = "generateCode",
+      inputId = ns("generateCode"),
       label = "Generate Code"
     )
     

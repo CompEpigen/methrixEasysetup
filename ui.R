@@ -1,4 +1,10 @@
 
+library(shinydashboard)
+library(shinyFiles)
+library(data.table)
+library(shinyjs)
+library(rintrojs)
+library(shinyBS)
 
 ui <- dashboardPage(
   dashboardHeader(
@@ -18,7 +24,7 @@ ui <- dashboardPage(
           column(
             width = 4,
             box(
-              projectDetailsUI()
+              projectDetailsUI("Details of the project")
               )
           )
         )
@@ -32,7 +38,7 @@ ui <- dashboardPage(
             box(
               title = "Select the file locally",
               width = NULL,
-              fileIn())
+              fileIn("read_in"))
           ),
           column(
             width = 8,
@@ -41,38 +47,23 @@ ui <- dashboardPage(
               solidHeader = TRUE,
               width = NULL,
               status = "warning",
-              verbatimTextOutput("previewfilename"),
-              tableOutput("previewtable")
+              previewbedGraphInput("read_in")
               ),
            
-              readInParametersInput(),
+              readInParametersInput("read_in"),
             box(
               title = "Sample Annotation",
               solidHeader = TRUE,
               width = NULL,
               status = "warning",
-              sampleAnnotationUI()
+              sampleAnnotationUI("read_in")
             ),
             box(
               title = "Generated Code",
               solidHeader = TRUE,
               width = NULL,
               status = "warning",
-              verbatimTextOutput("generatedCode"),
-              actionButton(
-                inputId = "tab2Previous",
-                label = "Previous",
-                icon = icon("arrow-left")
-              ),
-              actionButton(
-                inputId = "startWorkflowR",
-                label = "Start WorkflowR"
-              ),
-              actionButton(
-                inputId = "tab2Next",
-                label = "Next",
-                icon = icon("arrow-right")
-              )
+              readInCode ("read_in")
             )
           )
         )
