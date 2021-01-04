@@ -38,11 +38,8 @@ ui <- dashboardPage(
             box(
               title = "Select the file locally",
               width = NULL,
-<<<<<<< HEAD
-              fileIn("read_in"))
-=======
-              fileIn("filein"))
->>>>>>> 593a31facc47097a36c25fc14b2e3c5df08c4b6b
+              fileIn("read_in")
+              )
           ),
           column(
             width = 8,

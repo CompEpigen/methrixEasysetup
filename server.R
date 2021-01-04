@@ -12,7 +12,7 @@ server <-   function(input, output, session){
       input$btn
       if(!is.null(input$btn)){
         slctd_file<-parseFilePaths(volumes, input$btn)
-        # output$filename<- renderText(as.character(tools::file_path_sans_ext(basename(slctd_file$datapath))))
+        # output$filename<- renderText(as.chfilesaracter(tools::file_path_sans_ext(basename(slctd_file$datapath))))
         filenames <- reactive({
           data.frame(
             as.vector(

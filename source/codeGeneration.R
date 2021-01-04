@@ -83,7 +83,13 @@ codeGeneration <- function(id, label = "read_in"){
           shinyjs::enable("vect_batch_size")
         } else {
           disable("vect_batch_size")
-        }
+        } 
+      })
+      
+      fileandpaths <-  reactive({
+        volumes = getVolumes()
+        slctd_file<-parseFilePaths(volumes, input$btn)
+        ((slctd_file$datapath))
       })
       
       
@@ -92,10 +98,17 @@ codeGeneration <- function(id, label = "read_in"){
         
         
         readInCode1 <- reactive({
-          cat(cat( "# Files \n
-        bdg_files <- ", fileandpaths()))
+          cat( "# Files \n
+        bdg_files <- c( \"  ")
+          cat(fileandpaths(), sep = "\",\n\"")
+          
+          cat(" \" )")
         })
         
+        output$generatedCode1 <- renderPrint({
+          readInCode1()
+        })
+
         readInCode2 <- reactive({
           cat("# CpG annotation\n
         chg19_cpgs <- methrix::extract_CPGs(ref_genome =",input$in_reference_cpgs," )\n" )
@@ -103,7 +116,8 @@ codeGeneration <- function(id, label = "read_in"){
         })
         
         output$generatedCode2 <- renderPrint({
-          readInCode2()})
+          readInCode2()
+          })
         
        
         
