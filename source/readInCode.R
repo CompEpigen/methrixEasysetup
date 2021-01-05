@@ -8,6 +8,7 @@ readInCode <- function(id){
       verbatimTextOutput(ns("generatedCode1")),
       verbatimTextOutput(ns("generatedCode2")),
       verbatimTextOutput(ns("generatedCode3")),
+      verbatimTextOutput(ns("generatedCode4")),
       actionButton(
         inputId = ns("tab2Previous"),
         label = "Previous",

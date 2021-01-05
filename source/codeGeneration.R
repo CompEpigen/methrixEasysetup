@@ -6,26 +6,6 @@ codeGeneration <- function(id, label = "read_in"){
     id, 
     function(input, output, session){
       
-      observeEvent(input$tab1Next,{
-        updateTabsetPanel(session, 
-                          "mES1",
-                          selected = "readIn")
-      })
-      
-      
-      observeEvent(input$tab2Previous,{
-        updateTabsetPanel(session,
-                          "mES1",
-                          selected = "start")
-      })
-      
-      observeEvent(input$tab2Next,{
-        updateTabsetPanel(session,
-                          "mES1",
-                          selected = "preprocess")
-      })
-      
-      
       installed_cpgs <- reactive({
         a <- BSgenome::installed.genomes(splitNameParts = TRUE)
         a[,1]
@@ -96,6 +76,9 @@ codeGeneration <- function(id, label = "read_in"){
       
       observeEvent(input$code,{
         
+        values1 <- reactiveValues()
+        values2 <- reactiveValues()
+        values3 <- reactiveValues()
         
         readInCode1 <- reactive({
           cat( "# Files \n
@@ -111,7 +94,7 @@ codeGeneration <- function(id, label = "read_in"){
 
         readInCode2 <- reactive({
           cat("# CpG annotation\n
-        chg19_cpgs <- methrix::extract_CPGs(ref_genome =",input$in_reference_cpgs," )\n" )
+        chg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs," \")\n" )
           cat("\n")
         })
         
@@ -121,7 +104,7 @@ codeGeneration <- function(id, label = "read_in"){
         
        
         
-        readInCode3 <- reactive ({
+        readInCode4 <- reactive ({
           
           if(input$pipeline == "NULL"){
             cat(" # Read bedgraph file \n")
@@ -166,16 +149,9 @@ codeGeneration <- function(id, label = "read_in"){
           }
         })
         
-        output$generatedCode3 <- renderPrint({
-          readInCode3()})
-        
-        
-        # sink("hey.R")
-        # generatedCode()
-        # sink()
-        
-        
-        
+        output$generatedCode4 <- renderPrint({
+          readInCode4()
+          })
       })
     }
   )
