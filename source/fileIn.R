@@ -1,5 +1,5 @@
 
-fileIn <- function(id, label = "filein"){
+fileIn <- function(id, label = "read_in"){
   shinyjs::useShinyjs()
   ns <- NS(id)
   tagList(

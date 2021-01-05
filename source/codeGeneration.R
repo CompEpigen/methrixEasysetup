@@ -82,7 +82,7 @@ codeGeneration <- function(id, label = "read_in"){
         
         readInCode1 <- reactive({
           cat( "# Files \n
-        bdg_files <- c( \"  ")
+        bdg_files <- c( \"")
           cat(fileandpaths(), sep = "\",\n\"")
           
           cat(" \" )")

@@ -1,26 +1,20 @@
 
 
-sampleAnnotationUI <- function(id, label = label){
+sampleAnnotationUI <- function(id){
   
   ns <- NS(id)
+  
   tagList(
     
-    fileInput(
-      inputId = ns("sampleanno"), 
-      label = "Sample Annotation file",
-      multiple = FALSE, 
-      accept = ".csv", 
-      buttonLabel = icon("Browse")
-    ),
+    shinyFilesButton(ns("Btn_GetFile"), 
+                     "Choose a file" ,
+                     title = "Please select a file:",
+                     multiple = FALSE,
+                     buttonType = "default", 
+                     class = NULL),
     
     tableOutput(
       outputId = ns("sampleannoTable")
-    ),
-    
-    actionButton(
-      inputId = ns("generateCode"),
-      label = "Generate Code"
-    )
-    
+    ) 
   )
 }

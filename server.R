@@ -1,6 +1,14 @@
 
 
 server <-   function(input, output, session){
+
+  
+  bedgraphFilepathsServer("read_in")
+  codeGeneration("read_in")
+  sampleAnnotationserver("read_in")
+  
+  
+  
   
   observeEvent(input$tab1Next,{
     updateTabsetPanel(session, 
@@ -21,50 +29,6 @@ server <-   function(input, output, session){
                       selected = "preprocess")
   })
   
-  
-  bedgraphFilepathsServer("read_in")
-  codeGeneration("read_in")
-
-    
-    volumes = getVolumes()
-    observe({ 
-      input$btn
-      if(!is.null(input$btn)){
-        slctd_file<-parseFilePaths(volumes, input$btn)
-        # output$filename<- renderText(as.chfilesaracter(tools::file_path_sans_ext(basename(slctd_file$datapath))))
-        filenames <- reactive({
-          data.frame(
-            as.vector(
-              sub(
-                pattern= "(.*?)\\..*$",
-                replacement = "\\1",
-                basename(slctd_file$datapath)
-              )
-            )
-          )
-        })
-        saraw<- reactive({
-          req(input$sampleanno)
-          insampleanno <- input$sampleanno
-          read.csv(insampleanno$datapath, sep = ",", header = TRUE)
-        })
-        
-        filenames <- reactive({
-          req(input$btn)
-          data.frame(
-            as.character(
-              basename(slctd_file$datapath)
-            )
-          )
-        })
-        
-        output$sampleannoTable <- renderTable({
-            req(input$sampleanno)
-            cbind(filenames(), saraw())
-        })
-      }
-    }
-    )
     
    
     
