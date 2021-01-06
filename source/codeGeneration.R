@@ -69,23 +69,17 @@ codeGeneration <- function(id, label = "read_in"){
       fileandpaths <-  reactive({
         volumes = getVolumes()
         slctd_file<-parseFilePaths(volumes, input$btn)
-        ((slctd_file$datapath))
+        (list(slctd_file$datapath))
       })
       
       
       
       observeEvent(input$code,{
         
-        values1 <- reactiveValues()
-        values2 <- reactiveValues()
-        values3 <- reactiveValues()
-        
         readInCode1 <- reactive({
-          cat( "# Files \n
-        bdg_files <- c( \"")
-          cat(fileandpaths(), sep = "\",\n\"")
+          cat( "# Files \n")
+        cat("bdg_files <- ",paste(fileandpaths()), sep = "")
           
-          cat(" \" )")
         })
         
         output$generatedCode1 <- renderPrint({
@@ -94,7 +88,7 @@ codeGeneration <- function(id, label = "read_in"){
 
         readInCode2 <- reactive({
           cat("# CpG annotation\n
-        chg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs," \")\n" )
+        hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
           cat("\n")
         })
         
@@ -152,6 +146,134 @@ codeGeneration <- function(id, label = "read_in"){
         output$generatedCode4 <- renderPrint({
           readInCode4()
           })
+        
+        home <- normalizePath("C:", winslash = "/")
+
+        # directory <- renderText({
+        # 
+        #   req(input$projectDirectory)
+        # 
+        #   file.path(
+        #     home,
+        #     paste(unlist(input$projectDirectory$path[-1]),
+        #           collapse = .Platform$file.sep))
+        # })
+        # 
+        # volumes = getVolumes()
+        # if(!is.null(input$Btn_GetFile)){
+        #   sampleannoFile <- parseFilePaths(volumes, input$Btn_GetFile)
+        #   sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
+        # }
+
+        
+
+        read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
+
+        sink(file = read_in_filePath())
+        
+        cat("---\n")
+        cat("title: ",input$projectName,"\n")
+        cat("author: ",input$authorName,"\n")
+        cat("date: \'\`r format(Sys.time(), \"%d %B, %Y\")\`\'\n")
+        cat("output: workflowr::wflow_html\n")
+        cat("editor_options:\n")
+        cat("\t chunk_output_type: console\n")
+        cat("---\n")
+        cat("\n")
+        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n
+        # Installing libraries\n")
+        cat("library(methrix)\n")
+        cat("library(data.table)\n")
+        cat("library(shinyFiles)\n")
+        cat("library(shinyDashboard)\n")
+        cat("library(dmrseq)\n")
+        cat("library(DSS)\n")
+        cat("library(rGREAT)\n")
+        cat("library(rtracklayer)\n")
+        cat("library(Gviz)\n")
+        cat("library(biomaRt)\n")
+        cat("library(pheatmap)\n")
+        cat("\n")
+        cat("\`\`\`\n")
+        cat("\n")
+        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\n")
+        cat( "# Files \n")
+        cat("bdg_files <- ",paste(fileandpaths()), sep = "")
+        cat("\`\`\`\n")
+        cat("\n")
+        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("# CpG annotation\n
+        hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
+        cat("\n")
+        cat("\`\`\`\n")
+        cat("\n")
+        
+        if(!is.null(input$Btn_GetFile)){
+          cat(" \n")
+        } else {
+          cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+          cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)\n", sep = "")
+          cat("\`\`\`\n")
+        }
+        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        if(input$pipeline == "NULL"){
+          cat(" # Read bedgraph file \n")
+          cat( "methrix::read_bedgraphs( \n")
+          cat( "files = bdg_files,\n")
+          cat( "ref_cpgs = hg19_cpgs,\n")
+          cat( "pipeline =", input$pipeline, ",\n")
+          cat( "zero_based =" ,input$zerobased, ",\n")
+          cat( "stranded =" , input$stranded, ",\n")
+          cat( "collapse_strands =", input$collapse, ",\n")
+          cat( "vect =", input$vect,",\n")
+          
+          if (input$vect == TRUE){
+            cat( "vect_batch_size =",  input$vect_batch_size ,",\n")}
+          cat( "chr_idx =", input$chr_idx,  ",\n")
+          cat( "start_idx =", input$start_idx, ",\n")
+          cat( "end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ",\n")
+          cat( "beta_idx =", ifelse(is.na(input$beta_idx), "NULL", input$beta_idx), ",\n")
+          cat( "M_idx =", 
+               ifelse(is.na(input$M_idx), "NULL", input$M_idx),
+               ",\n")
+          cat( "U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
+          cat( "strand_idx =", input$strand_idx, ",\n")
+          cat( "cov_idx =", input$cov_idx, ",\n")
+          cat( "synced_coordinates =", input$synced_coordinates, ",\n")
+          cat( "n_threads = ", input$n_threads )
+          
+          if(!is.null(input$Btn_GetFile)){
+            cat( " ")
+          }
+          else {
+            cat(",\n coldata = sample_anno ")
+          }
+          cat(")\n")
+          cat("\`\`\`\n")
+          
+          
+        }
+        else{
+          
+          
+          
+          cat("\n# Reading bedGraph file\n
+        methrix::read_bedgraphs( \n")
+          cat( "files = bdg_files,\n")
+          cat( "ref_cpgs = hg19_cpgs,\n")
+          cat( "pipeline =", input$pipeline)
+          if(!is.null(input$Btn_GetFile)){
+            cat( " ")
+          }
+          else {
+            cat(",\n coldata = sample_anno")
+          }
+          cat(")")
+        }
+        
+        sink()
+
       })
     }
   )

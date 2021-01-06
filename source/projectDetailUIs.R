@@ -1,6 +1,6 @@
 
 
-projectDetailsUI <- function(id, label = "Details of the project"){
+projectDetailsUI <- function(id, label = "read_in"){
   ns <- NS(id)
   tagList(
     shinyDirButton(
@@ -21,7 +21,9 @@ projectDetailsUI <- function(id, label = "Details of the project"){
       inputId = ns("tab1Next"),
       label = "Next",
       icon = icon("arrow-right")
-    )
+    ),
+    
+    verbatimTextOutput(ns("paths"))
   )
 }
 

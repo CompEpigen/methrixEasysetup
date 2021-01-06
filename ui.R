@@ -37,7 +37,7 @@ ui <- dashboardPage(
           column(
             width = 4,
             box(
-              projectDetailsUI("Details of the project")
+              projectDetailsUI("read_in")
               )
           )
         )
@@ -90,7 +90,7 @@ ui <- dashboardPage(
           column(
             width = 3,
             box( width = NULL,
-              preprocessInput()
+              preprocessInput("read_in")
             )
             ),
             column(

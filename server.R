@@ -2,10 +2,11 @@
 
 server <-   function(input, output, session){
 
-  
+  projectDetailsserver("read_in")
   bedgraphFilepathsServer("read_in")
   codeGeneration("read_in")
   sampleAnnotationserver("read_in")
+  
   
   
   
@@ -144,5 +145,7 @@ server <-   function(input, output, session){
     })
     
 }
+
+
 
 

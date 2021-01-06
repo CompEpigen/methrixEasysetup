@@ -2,31 +2,33 @@
 
 preprocessInput <- function(id){
   
+  ns <- NS(id)
+  
   tagList(
     
     checkboxInput(
-      "report_dir",
+      ns("report_dir"),
       "Initial QC",
       
     ),
     
     checkboxInput(
-      "coverageBasedFiltering",
+      ns("coverageBasedFiltering"),
       " Coverage based Filtering"
     ),
     
     checkboxInput(
-      "snpFiltering",
+      ns("snpFiltering"),
       "SNP Filtering"
     ),
     
     checkboxInput(
-      "methrixReport",
+      ns("methrixReport"),
       "Methrix Report"
     ),
     
     actionButton(
-      inputId = "code2",
+      inputId = ns("code2"),
       label = "Generate Code"
     )
   )

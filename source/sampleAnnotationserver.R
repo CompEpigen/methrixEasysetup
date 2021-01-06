@@ -28,7 +28,7 @@ sampleAnnotationserver <- function(id){
         
         output$generatedCode3 <- renderPrint({
           req(input$Btn_GetFile)
-          cat("sampleanno <- read.csv(\"", paste(sampleannoFilePath()) ,"\" ,sep = \",\", header = TRUE)")
+          cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)", sep = "")
         })
         
       })
