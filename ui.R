@@ -5,6 +5,8 @@ library(data.table)
 library(shinyjs)
 library(rintrojs)
 library(shinyBS)
+library(shinyhelper)
+library(magrittr)
 
 source('F:/methrixEasySetup/source/bedgraphFilepathsServer.R')
 source('F:/methrixEasySetup/source/codeGeneration.R')
@@ -38,7 +40,7 @@ ui <- dashboardPage(
             width = 4,
             box(
               projectDetailsUI("read_in")
-              )
+            )
           )
         )
       ),
@@ -52,7 +54,7 @@ ui <- dashboardPage(
               title = "Select the file locally",
               width = NULL,
               fileIn("read_in")
-              )
+            )
           ),
           column(
             width = 8,
@@ -62,9 +64,9 @@ ui <- dashboardPage(
               width = NULL,
               status = "warning",
               previewbedGraphInput("read_in")
-              ),
-           
-              readInParametersInput("read_in"),
+            ),
+            
+            readInParametersInput("read_in"),
             box(
               title = "Sample Annotation",
               solidHeader = TRUE,
@@ -90,39 +92,11 @@ ui <- dashboardPage(
           column(
             width = 3,
             box( width = NULL,
-              preprocessInput("read_in")
+                 preprocessInput("read_in")
             )
-            ),
-            column(
-              width =4 ,
-              box(
-                width = NULL,
-                title = "Intial QC",
-                verbatimTextOutput("intialQC")
-              ),
-              
-              box(
-                width = NULL,
-                title = "Visualization and QC after filtering",
-                h4("Methrix Report"),
-                verbatimTextOutput("methrixReport")
-              )
-              
-            ),
-          column (
-            width=4,
-            box(
-              width = NULL,
-              title = "Filtering",
-              h4("Coverage based filtering"),
-              verbatimTextOutput("coverageBasedFiltering"),
-              h5("Removing uncovered sites"),
-              verbatimTextOutput("coverageRemoval"),
-              h4("SNP filtering"),
-              verbatimTextOutput("snpFiltering")
-            )
-          )
-            
+          ),
+          preprocessUI("read_in")
+          
           
         )     
       )

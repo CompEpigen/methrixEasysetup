@@ -164,8 +164,8 @@ codeGeneration <- function(id, label = "read_in"){
         #   sampleannoFile <- parseFilePaths(volumes, input$Btn_GetFile)
         #   sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
         # }
-
-        
+        # 
+        # 
 
         read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
 
@@ -200,7 +200,7 @@ codeGeneration <- function(id, label = "read_in"){
         cat("\n")
         cat( "# Files \n")
         cat("bdg_files <- ",paste(fileandpaths()), sep = "")
-        cat("\`\`\`\n")
+        cat("\n\n\`\`\`\n")
         cat("\n")
         cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
         cat("# CpG annotation\n
@@ -238,8 +238,8 @@ codeGeneration <- function(id, label = "read_in"){
                ifelse(is.na(input$M_idx), "NULL", input$M_idx),
                ",\n")
           cat( "U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
-          cat( "strand_idx =", input$strand_idx, ",\n")
-          cat( "cov_idx =", input$cov_idx, ",\n")
+          cat( "strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ",\n")
+          cat( "cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
           cat( "synced_coordinates =", input$synced_coordinates, ",\n")
           cat( "n_threads = ", input$n_threads )
           
