@@ -62,7 +62,7 @@ readInParametersInput <- function (id, label = label){
            numericInput(
              inputId = ns("M_idx"),
              label = "Methylated counts column ",
-             value =0 ,
+             value = NULL ,
              min = 1,
              max = 8
            ),
@@ -104,7 +104,7 @@ readInParametersInput <- function (id, label = label){
            numericInput(
              inputId = ns("cov_idx"),
              label = "Beta value column of the bedGraph file",
-             value = 1,
+             value = NULL,
              min = 1,
              max = 8
            )

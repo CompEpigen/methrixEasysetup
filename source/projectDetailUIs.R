@@ -1,6 +1,10 @@
 
 
+
 projectDetailsUI <- function(id, label = "read_in"){
+
+
+
   ns <- NS(id)
   tagList(
     shinyDirButton(
