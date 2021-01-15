@@ -5,8 +5,10 @@ library(data.table)
 library(shinyjs)
 library(rintrojs)
 library(shinyBS)
-library(shinyhelper)
 library(magrittr)
+library(shinyhelper)
+
+
 
 source('F:/methrixEasySetup/source/bedgraphFilepathsServer.R')
 source('F:/methrixEasySetup/source/codeGeneration.R')
@@ -14,12 +16,16 @@ source('F:/methrixEasySetup/source/codeGenerationInput.R')
 source('F:/methrixEasySetup/source/fileIn.R')
 source('F:/methrixEasySetup/source/intialQCOutput.R')
 source('F:/methrixEasySetup/source/preprocessInput.R')
+source('F:/methrixEasySetup/source/preprocessServer.R')
+source('F:/methrixEasySetup/source/preprocessUI.R')
 source('F:/methrixEasySetup/source/previewbedGraphInput.R')
+source('F:/methrixEasySetup/source/projectDetailsserver.R')
 source('F:/methrixEasySetup/source/projectDetailUIs.R')
 source('F:/methrixEasySetup/source/readInCode.R')
 source('F:/methrixEasySetup/source/readInParametersInput.R')
 source('F:/methrixEasySetup/source/sampleAnnotationUI.R')
 source('F:/methrixEasySetup/source/sampleAnnotationserver.R')
+
 
 ui <- dashboardPage(
   dashboardHeader(
@@ -37,7 +43,7 @@ ui <- dashboardPage(
         value = "start",
         fluidRow( 
           column(
-            width = 4,
+            width = 5,
             box(
               projectDetailsUI("read_in")
             )
