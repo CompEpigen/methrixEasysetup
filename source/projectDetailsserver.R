@@ -6,7 +6,7 @@ projectDetailsserver <- function(id){
     id,
     function(input, output,session){
       
-      observe_helpers(withMathJax = TRUE)
+      
       
       observe({  
         if(!is.null(input$projectDirectory)){

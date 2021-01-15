@@ -19,6 +19,8 @@ readInCode <- function(id){
         inputId = ns("tab2Next"),
         label = "Next",
         icon = icon("arrow-right")
-      )
+      ),
+      h5("Note: On clicking Next, read_in.Rmd file will be created in analysis folder of the workflow project that was created previously."),
+      
     )
   }

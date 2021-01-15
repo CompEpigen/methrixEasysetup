@@ -6,26 +6,61 @@ preprocessInput <- function(id){
   
   tagList(
     
+    h5("Coverage based filtering"),
     checkboxInput(
-      ns("report_dir"),
-      "Initial QC",
-      
-    ),
-    
+      ns("mask_methrix"),
+      " Mask Methrix"
+    )%>%
+      helper(type = "inline",
+             title = "Mask Methrix",
+             content = c(" Mask the CpG sites which has very low or high coverage."),
+             size = "s"),
     checkboxInput(
-      ns("coverageBasedFiltering"),
-      " Coverage based Filtering"
-    ),
-    
+      ns("remove_uncovered"),
+      " Remove Uncovered"
+    ) %>%
+      helper(type = "inline",
+             title = "Remove Uncovered",
+             content = c(" Remove the sites which are not covered by any of the samples"),
+             size = "s"),
+    checkboxInput(
+      ns("coverage_filter"),
+      " Filter coverage"
+    ) %>%
+      helper(type = "inline",
+             title = "Coverage filter",
+             content = c(" Remove the sparsely covered sites",
+                         "Use min_samples to define the minimum size of the sampes thta should excess the treshold for each CpG sites.",
+                         "# Have to add treshold"),
+             size = "s"),
     checkboxInput(
       ns("snpFiltering"),
       "SNP Filtering"
-    ),
+    ) %>%
+      helper(type = "inline",
+             title = "SNP filtering",
+             content = c(" SNPs could disrupt the methylation calling.",
+                         " So, it is important to remove CpG sites that overlap the common variants."),
+             size = "s"),
     
     checkboxInput(
-      ns("methrixReport"),
-      "Methrix Report"
-    ),
+      ns("methrixreReport"),
+      "Methrix Report after filtering?"
+    )%>%
+      helper(type = "inline",
+             title = "Methrix Report",
+             content = c(" After filtering, it is essential to run the report again"),
+             size = "s"),
+    
+    checkboxInput(
+      ns("plotsafterfilter"),
+      "Methrix plots after filtering?"
+    ) %>%
+      helper(type = "inline",
+             title = "Plots",
+             content = c(" To visualize the study. ",
+                         "We can loos at the desity of coverage by both sample and group-wise."),
+             size = "s"),
     
     actionButton(
       inputId = ns("code2"),

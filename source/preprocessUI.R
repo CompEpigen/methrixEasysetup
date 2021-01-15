@@ -20,7 +20,9 @@ preprocessUI <- function(id){
         width = NULL,
         title = "Visualization and QC after filtering",
         h4("Methrix Report"),
-        verbatimTextOutput(ns("methrixReport"))
+        verbatimTextOutput(ns("methrixReport")),
+        h4("Plots after filtering"),
+        verbatimTextOutput(ns("plotsafterfiltering"))
       )
       
     ),
@@ -30,11 +32,14 @@ preprocessUI <- function(id){
         width = NULL,
         title = "Filtering",
         h4("Coverage based filtering"),
-        verbatimTextOutput(ns("coverageBasedFiltering")),
+        h5("Mask Methrix"),
+        verbatimTextOutput(ns("maskMethrixCode")),
         h5("Removing uncovered sites"),
         verbatimTextOutput(ns("coverageRemoval")),
+        h5("Coverage filter"),
+        verbatimTextOutput(ns("coverageFilter")),
         h4("SNP filtering"),
-        verbatimTextOutput(ns("snpFiltering"))
+        verbatimTextOutput(ns("snpFiltering")),
       )
     )
   )

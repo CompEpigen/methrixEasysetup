@@ -112,7 +112,7 @@ codeGeneration <- function(id, label = "read_in"){
             cat( "vect =", input$vect,",\n")
             
             if (input$vect == TRUE){
-            cat( "vect_batch_size =",  input$vect_batch_size ,",\n")}
+              cat( "vect_batch_size =",  input$vect_batch_size ,",\n")}
             cat( "chr_idx =", input$chr_idx,  ",\n")
             cat( "start_idx =", input$start_idx, ",\n")
             cat( "end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ",\n")
@@ -121,11 +121,18 @@ codeGeneration <- function(id, label = "read_in"){
                  ifelse(is.na(input$M_idx), "NULL", input$M_idx),
                  ",\n")
             cat( "U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
-            cat( "strand_idx =", input$strand_idx, ",\n")
-            cat( "cov_idx =", input$cov_idx, ",\n")
+            cat( "strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ",\n")
+            cat( "cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
             cat( "synced_coordinates =", input$synced_coordinates, ",\n")
-            cat( "n_threads = ", input$n_threads, ",\n")
-            cat( "coldata = sample_anno \n)\n")
+            cat( "n_threads = ", input$n_threads )
+            
+            if(!is.null(input$Btn_GetFile)){
+              cat( " ")
+            }
+            else {
+              cat(",\n coldata = sample_anno ")
+            }
+            cat(")\n")
             cat("\`\`\`\n")
             
             
@@ -138,8 +145,14 @@ codeGeneration <- function(id, label = "read_in"){
         methrix::read_bedgraphs( \n")
             cat( "files = bdg_files,\n")
             cat( "ref_cpgs = hg19_cpgs,\n")
-            cat( "pipeline =", input$pipeline, ")\n")
-            
+            cat( "pipeline =", input$pipeline)
+            if(!is.null(input$Btn_GetFile)){
+              cat( " ")
+            }
+            else {
+              cat(",\n coldata = sample_anno")
+            }
+            cat(")")
           }
         })
         
@@ -149,24 +162,7 @@ codeGeneration <- function(id, label = "read_in"){
         
         home <- normalizePath("C:", winslash = "/")
 
-        # directory <- renderText({
-        # 
-        #   req(input$projectDirectory)
-        # 
-        #   file.path(
-        #     home,
-        #     paste(unlist(input$projectDirectory$path[-1]),
-        #           collapse = .Platform$file.sep))
-        # })
-        # 
-        # volumes = getVolumes()
-        # if(!is.null(input$Btn_GetFile)){
-        #   sampleannoFile <- parseFilePaths(volumes, input$Btn_GetFile)
-        #   sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
-        # }
-        # 
-        # 
-
+        
         read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
 
         sink(file = read_in_filePath())
