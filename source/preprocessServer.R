@@ -138,15 +138,15 @@ preprocessServer <- function(id){
       })
       
       preprocessDirectory <- reactive({normalizePath("analysis/preprocess.Rmd", winslash = "/")})
-<<<<<<< HEAD
+
+      
+      
+      
+
       
       sink(file = preprocessDirectory())
-      
-=======
-      
-      sink(file = preprocessDirectory())
-      sink("preprocess.Rmd")
->>>>>>> e3c6e273d076411d1e787b8d7cc7199528978172
+     
+
       
       cat("---\n")
       cat("title: ",input$projectName,"\n")

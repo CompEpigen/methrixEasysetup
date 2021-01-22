@@ -61,14 +61,22 @@ codeGeneration <- function(id, label = "read_in"){
         if(is.na(input$chr_idx) | is.na(input$start_idx)){
           showNotification("Give proper Chromosome and Start indexes")
           return()
-        } else if (length(which(duplicated(c( input$chr_idx,input$start_idx, input$end_idx, input$strand_idx, input$beta_idx, input$M_idx,
-<<<<<<< HEAD
-                                                input$U_idx, input$cov_idx), incomparables = F))) > 0){
-=======
-                                                input$U_idx, input$cov_idx)))) > 0){
->>>>>>> e3c6e273d076411d1e787b8d7cc7199528978172
+        } else if (length(which(duplicated(c( 
+          ifelse(is.na(input$chr_idx), 100, input$chr_idx),
+          ifelse(is.na(input$start_idx), 101, input$start_idx), 
+          ifelse(is.na(input$end_idx), 102, input$end_idx), 
+          ifelse(is.na(input$strand_idx), 103, input$strand_idx), 
+          ifelse(is.na(input$beta_idx), 104, input$beta_idx), 
+          ifelse(is.na(input$M_idx), 105, input$M_idx),
+          ifelse(is.na(input$U_idx), 106, input$U_idx), 
+          ifelse(is.na(input$cov_idx), 107, input$cov_idx))))) > 0){
+
+                                                
+
           showNotification("Duplicated Index")
           return()
+        } else {
+          showNotification("Code works", type = "message")
         }
         
         
