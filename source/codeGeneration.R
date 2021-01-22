@@ -62,7 +62,11 @@ codeGeneration <- function(id, label = "read_in"){
           showNotification("Give proper Chromosome and Start indexes")
           return()
         } else if (length(which(duplicated(c( input$chr_idx,input$start_idx, input$end_idx, input$strand_idx, input$beta_idx, input$M_idx,
+<<<<<<< HEAD
                                                 input$U_idx, input$cov_idx), incomparables = F))) > 0){
+=======
+                                                input$U_idx, input$cov_idx)))) > 0){
+>>>>>>> e3c6e273d076411d1e787b8d7cc7199528978172
           showNotification("Duplicated Index")
           return()
         }
