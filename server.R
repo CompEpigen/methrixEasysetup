@@ -7,56 +7,13 @@ server <-   function(input, output, session){
   codeGeneration("read_in")
   sampleAnnotationserver("read_in")
   preprocessServer("read_in")
+  tabChangeserver("read_in")
   
   observe_helpers(withMathJax = TRUE)
   
   
   
-  observeEvent(input$tab1Next,{
-    updateTabsetPanel(session, 
-                      "mES1",
-                      selected = "readIn")
-  })
   
-  
-  observeEvent(input$tab2Previous,{
-    updateTabsetPanel(session,
-                      "mES1",
-                      selected = "start")
-  })
-  
-  observeEvent(input$tab2Next,{
-    updateTabsetPanel(session,
-                      "mES1",
-                      selected = "preprocess")
-  })
-  
-    
-   
-    
-    observeEvent(input$tab1Next,{
-      updateTabsetPanel(session, 
-                        "mES1",
-                        selected = "readIn")
-    })
-    
-   
-    
-    
-    
-    
-    observeEvent(input$tab2Previous,{
-      updateTabsetPanel(session,
-                        "mES1",
-                        selected = "start")
-    })
-    
-    observeEvent(input$tab2Next,{
-      updateTabsetPanel(session,
-                        "mES1",
-                        selected = "preprocess")
-    })
-    
    
     
     

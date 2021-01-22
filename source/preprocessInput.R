@@ -15,6 +15,9 @@ preprocessInput <- function(id){
              title = "Mask Methrix",
              content = c(" Mask the CpG sites which has very low or high coverage."),
              size = "s"),
+    uiOutput(
+      ns("maskmethrixtest")
+    ),
     checkboxInput(
       ns("remove_uncovered"),
       " Remove Uncovered"
@@ -33,6 +36,9 @@ preprocessInput <- function(id){
                          "Use min_samples to define the minimum size of the sampes thta should excess the treshold for each CpG sites.",
                          "# Have to add treshold"),
              size = "s"),
+    uiOutput(
+      ns("removeUncoveredtest")
+    ),
     checkboxInput(
       ns("snpFiltering"),
       "SNP Filtering"

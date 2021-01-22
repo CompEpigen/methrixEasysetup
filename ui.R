@@ -1,4 +1,3 @@
-
 library(shinydashboard)
 library(shinyFiles)
 library(data.table)
@@ -25,6 +24,8 @@ source('F:/methrixEasySetup/source/readInCode.R')
 source('F:/methrixEasySetup/source/readInParametersInput.R')
 source('F:/methrixEasySetup/source/sampleAnnotationUI.R')
 source('F:/methrixEasySetup/source/sampleAnnotationserver.R')
+source('F:/methrixEasySetup/source/navPageUI.R')
+source('F:/methrixEasySetup/source/tabChangeserver.R')
 
 
 ui <- dashboardPage(

@@ -17,9 +17,16 @@ projectDetailsUI <- function(id, label = "read_in"){
              title = "Choose a directory",
              content = c("Choose the directory to create a workflow project.",
                          "<b>Note:</b> Make sure the directory don't have an existing workflow project."),
-             size = "s")
-    
-    ,
+             size = "s"),
+    checkboxInput(
+      inputId = ns("workflowExists"),
+      label = "Click if you want to edit the workflow project that was already created"
+    )%>%
+      helper(type = "inline",
+             title = "New/ Existing Workflow project",
+             content = c("Click only if you want to edit the workflow project that was created previously using this app.",
+                         "If you want to create a new workflow project, don't check-in this box."),
+             size = "s"),
     textInput(
       inputId = ns("projectName"),
       label = "Name of the Project"
