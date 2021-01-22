@@ -63,7 +63,7 @@ readInParametersInput <- function (id, label = label){
              label = "Chromosome column",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "Chromosome index",
@@ -75,7 +75,7 @@ readInParametersInput <- function (id, label = label){
              label = "Beta value column ",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "Beta value column",
@@ -92,7 +92,7 @@ readInParametersInput <- function (id, label = label){
              label = "Methylated counts column ",
              value = NULL ,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "Methylated counts column",
@@ -128,7 +128,7 @@ readInParametersInput <- function (id, label = label){
              label = "Start column ",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "Start index",
@@ -139,7 +139,7 @@ readInParametersInput <- function (id, label = label){
              label = "Un-methylated counts column ",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            )  %>%
              helper(type = "inline",
                     title = "un-Methylated counts column",
@@ -160,7 +160,7 @@ readInParametersInput <- function (id, label = label){
              label = "Coverage column",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            )  %>%
              helper(type = "inline",
                     title = "Coverage column",
@@ -189,7 +189,7 @@ readInParametersInput <- function (id, label = label){
              label = "End column ",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "End column",
@@ -200,7 +200,7 @@ readInParametersInput <- function (id, label = label){
              label = "Strand information column",
              value = NULL,
              min = 1,
-             max = 8
+             max = 100
            ) %>%
              helper(type = "inline",
                     title = "Strand information column",
@@ -209,10 +209,16 @@ readInParametersInput <- function (id, label = label){
            numericInput(
              inputId = ns("n_threads"),
              label = "Number of threads to use",
-             value = NULL,
+             value = 1,
              min = 1,
              max = 8
            ),
+           
+           actionButton(
+             inputId = ns("validate"),
+             label = "Validate Code"
+           ),
+           useShinyalert(),
            
            actionButton(
              inputId = ns("code"),

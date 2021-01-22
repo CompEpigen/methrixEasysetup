@@ -56,7 +56,19 @@ codeGeneration <- function(id, label = "read_in"){
         }
       })
       
-      
+      observeEvent(input$validate,{
+        
+        if(is.na(input$chr_idx) | is.na(input$start_idx)){
+          showNotification("Give proper Chromosome and Start indexes")
+          return()
+        } else if (length(which(duplicated(c( input$chr_idx,input$start_idx, input$end_idx, input$strand_idx, input$beta_idx, input$M_idx,
+                                                input$U_idx, input$cov_idx)))) > 0){
+          showNotification("Duplicated Index")
+          return()
+        }
+        
+        
+      })
       
       observeEvent(input$vect,{
         if(input$vect == TRUE){
@@ -72,9 +84,17 @@ codeGeneration <- function(id, label = "read_in"){
         (list(slctd_file$datapath))
       })
       
-      
+      observeEvent(input$validate,{
+        if(is.null(input$btn)){
+          shinyalert(title = "validation error",
+                     "Please choose the bedgraph files",
+                     type = "error")
+        }
+      })
       
       observeEvent(input$code,{
+        
+        
         
         readInCode1 <- reactive({
           cat( "# Files \n")
@@ -102,37 +122,26 @@ codeGeneration <- function(id, label = "read_in"){
           
           if(input$pipeline == "NULL"){
             cat(" # Read bedgraph file \n")
-            cat( "methrix::read_bedgraphs( \n")
-            cat( "files = bdg_files,\n")
-            cat( "ref_cpgs = hg19_cpgs,\n")
-            cat( "pipeline =", input$pipeline, ",\n")
-            cat( "zero_based =" ,input$zerobased, ",\n")
-            cat( "stranded =" , input$stranded, ",\n")
-            cat( "collapse_strands =", input$collapse, ",\n")
-            cat( "vect =", input$vect,",\n")
+            cat( "meth <- methrix::read_bedgraphs( files = bdg_files, ref_cpgs = hg19_cpgs,\n")
+            cat( "                                pipeline =", input$pipeline, ", zero_based =" ,input$zerobased, ",\n")
+            cat( "                                stranded =" , input$stranded, ", collapse_strands =", input$collapse, ",\n")
+            cat( "                                vect =", input$vect,",\n")
             
             if (input$vect == TRUE){
               cat( "vect_batch_size =",  input$vect_batch_size ,",\n")}
-            cat( "chr_idx =", input$chr_idx,  ",\n")
-            cat( "start_idx =", input$start_idx, ",\n")
-            cat( "end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ",\n")
-            cat( "beta_idx =", ifelse(is.na(input$beta_idx), "NULL", input$beta_idx), ",\n")
-            cat( "M_idx =", 
-                 ifelse(is.na(input$M_idx), "NULL", input$M_idx),
-                 ",\n")
-            cat( "U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
-            cat( "strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ",\n")
-            cat( "cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
-            cat( "synced_coordinates =", input$synced_coordinates, ",\n")
-            cat( "n_threads = ", input$n_threads )
+            cat( "                                chr_idx =", input$chr_idx,  ", start_idx =", input$start_idx, ",\n")
+            cat( "                                end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ", beta_idx =", ifelse(is.na(input$beta_idx), "NULL", input$beta_idx), ",\n")
+            cat( "                                M_idx =", ifelse(is.na(input$M_idx), "NULL", input$M_idx), ", U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
+            cat( "                                strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ", cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
+            cat( "                                synced_coordinates =", input$synced_coordinates, ", n_threads = ", input$n_threads )
             
-            if(!is.null(input$Btn_GetFile)){
+            if(is.null(input$Btn_GetFile)){
               cat( " ")
             }
             else {
-              cat(",\n coldata = sample_anno ")
+              cat(", coldata = sample_anno ")
             }
-            cat(")\n")
+            cat(")\n meth")
             cat("\`\`\`\n")
             
             
@@ -146,13 +155,13 @@ codeGeneration <- function(id, label = "read_in"){
             cat( "files = bdg_files,\n")
             cat( "ref_cpgs = hg19_cpgs,\n")
             cat( "pipeline =", input$pipeline)
-            if(!is.null(input$Btn_GetFile)){
-              cat( " ")
+            if(is.null(input$Btn_GetFile)){
+              cat( " )")
             }
             else {
-              cat(",\n coldata = sample_anno")
+              cat(",\n coldata = sample_anno)")
             }
-            cat(")")
+            
           }
         })
         
@@ -160,7 +169,10 @@ codeGeneration <- function(id, label = "read_in"){
           readInCode4()
           })
         
-        home <- normalizePath("C:", winslash = "/")
+      })
+      
+      observeEvent(input$tab2Next,{
+        
 
         
         read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
@@ -215,45 +227,35 @@ codeGeneration <- function(id, label = "read_in"){
         cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
         if(input$pipeline == "NULL"){
           cat(" # Read bedgraph file \n")
-          cat( "methrix::read_bedgraphs( \n")
-          cat( "files = bdg_files,\n")
-          cat( "ref_cpgs = hg19_cpgs,\n")
-          cat( "pipeline =", input$pipeline, ",\n")
-          cat( "zero_based =" ,input$zerobased, ",\n")
-          cat( "stranded =" , input$stranded, ",\n")
-          cat( "collapse_strands =", input$collapse, ",\n")
-          cat( "vect =", input$vect,",\n")
+          cat( "meth <- methrix::read_bedgraphs( files = bdg_files, ref_cpgs = hg19_cpgs,\n")
+          cat( "                                pipeline =", input$pipeline, ", zero_based =" ,input$zerobased, ",\n")
+          cat( "                                stranded =" , input$stranded, ", collapse_strands =", input$collapse, ",\n")
+          cat( "                                vect =", input$vect,",\n")
           
           if (input$vect == TRUE){
             cat( "vect_batch_size =",  input$vect_batch_size ,",\n")}
-          cat( "chr_idx =", input$chr_idx,  ",\n")
-          cat( "start_idx =", input$start_idx, ",\n")
-          cat( "end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ",\n")
-          cat( "beta_idx =", ifelse(is.na(input$beta_idx), "NULL", input$beta_idx), ",\n")
-          cat( "M_idx =", 
-               ifelse(is.na(input$M_idx), "NULL", input$M_idx),
-               ",\n")
-          cat( "U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
-          cat( "strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ",\n")
-          cat( "cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
-          cat( "synced_coordinates =", input$synced_coordinates, ",\n")
-          cat( "n_threads = ", input$n_threads )
+          cat( "                                chr_idx =", input$chr_idx,  ", start_idx =", input$start_idx, ",\n")
+          cat( "                                end_idx =", ifelse(is.na(input$end_idx), "NULL", input$end_idx), ", beta_idx =", ifelse(is.na(input$beta_idx), "NULL", input$beta_idx), ",\n")
+          cat( "                                M_idx =", ifelse(is.na(input$M_idx), "NULL", input$M_idx), ", U_idx =", ifelse(is.na(input$U_idx), "NULL", input$U_idx), ",\n")
+          cat( "                                strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ", cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
+          cat( "                                synced_coordinates =", input$synced_coordinates, ", n_threads = ", input$n_threads )
           
-          if(!is.null(input$Btn_GetFile)){
+          if(is.null(input$Btn_GetFile)){
             cat( " ")
           }
           else {
-            cat(",\n coldata = sample_anno ")
+            cat(", coldata = sample_anno ")
           }
-          cat(")\n")
+          cat(")\n meth")
           cat("\`\`\`\n")
+          
           
           
         }
         else{
           
           
-          
+          cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
           cat("\n# Reading bedGraph file\n
         methrix::read_bedgraphs( \n")
           cat( "files = bdg_files,\n")
@@ -266,7 +268,14 @@ codeGeneration <- function(id, label = "read_in"){
             cat(",\n coldata = sample_anno")
           }
           cat(")")
+          cat("\`\`\`\n")
         }
+        
+        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\n")
+        cat("# Saving object in workflow")
+        cat("saveRDS(meth, \"./data=raw_methrix.RDS\" ")
+        cat("\n")
         
         sink()
 
