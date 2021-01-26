@@ -17,19 +17,21 @@ sampleAnnotationserver <- function(id){
           sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
         }
         
-        
-        output$sampleannoTable <- renderTable({
+        observeEvent(input$addsampleanno,{
+          output$sampleannoTable <- renderTable({
+            
+            req(input$Btn_GetFile)
+            
+            read.csv(file = sampleannoFilePath(), sep = ",", header = T)
+            
+          })
           
-          req(input$Btn_GetFile)
-          
-          read.csv(file = sampleannoFilePath(), sep = ",", header = T)
-          
+          output$generatedCode3 <- renderPrint({
+            req(input$Btn_GetFile)
+            cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)", sep = "")
+          })
         })
         
-        output$generatedCode3 <- renderPrint({
-          req(input$Btn_GetFile)
-          cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)", sep = "")
-        })
         
       })
     }

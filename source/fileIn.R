@@ -8,7 +8,7 @@ fileIn <- function(id, label = "read_in"){
       "Please select the bedGraph files", 
       title = "Select the bedGraph files:", 
       multiple = TRUE, 
-      buttonType = "default", 
+      buttonType = "btn btn-primary", 
       class = NULL) %>%
       helper(type = "inline",
              title = "Select the bedGraph files",

@@ -10,7 +10,7 @@ sampleAnnotationUI <- function(id){
                      "Choose a file" ,
                      title = "Please select a file:",
                      multiple = FALSE,
-                     buttonType = "default", 
+                     buttonType = "btn btn-primary", 
                      class = NULL) %>%
       helper(type = "inline",
              title = "Sample Annotation file",
@@ -19,6 +19,8 @@ sampleAnnotationUI <- function(id){
                          "1. Make sure it is tab seperated file.",
                          "2. Make sure the sample annotation is filed alpha-numeric wise since the bedGraph files will be added in an alphabetically."),
              size = "s"),
+    actionButton(ns("addsampleanno"),
+                 "Add Sampe annotation to analysis"),
     
     tableOutput(
       outputId = ns("sampleannoTable")

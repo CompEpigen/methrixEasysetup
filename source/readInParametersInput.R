@@ -218,7 +218,7 @@ readInParametersInput <- function (id, label = label){
              inputId = ns("validate"),
              label = "Validate Code"
            ),
-           useShinyalert(),
+           
            
            actionButton(
              inputId = ns("code"),

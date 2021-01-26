@@ -70,14 +70,43 @@ codeGeneration <- function(id, label = "read_in"){
           ifelse(is.na(input$M_idx), 105, input$M_idx),
           ifelse(is.na(input$U_idx), 106, input$U_idx), 
           ifelse(is.na(input$cov_idx), 107, input$cov_idx))))) > 0){
-
-                                                
-
-          showNotification("Duplicated Index")
+          showNotification("Duplicated Index\n The code doesn't work.")
           return()
+        } else if(all(is.na(input$beta_idx) , is.na(input$cov_idx))){
+          if(is.na(input$M_idx) | is.na(input$U_idx)){
+            showNotification("Missing beta or coverage values.\nU and M are not available either!\nCode doesn't work")
+            return()
+          }
+        } else if(is.na(input$beta_idx) & !is.na(input$cov_idx)){
+          if(all(is.na(input$M_idx), is.na(input$U_idx))){
+            showNotification("Missing beta values but coverage info available.\nEither U or M are required for estimating beta values!\nCode doesn't work")
+            return()
+          } else if (all(!is.na(input$M_idx), !is.na(input$U_idx))){
+              showNotification("Estimating beta values from M and U\n Code Works")
+              return()
+            } else if (!is.na(input$M_idx)){
+              showNotification("Estimating beta values from M and coverage\n Code Works")
+              return()
+            } else if(!is.na(input$U_idx)){
+              showNotification("Estimating beta values from U and coverage\n Code works")
+              return()
+            }
+        } else if(!is.na(input$beta_idx) & is.na(input$cov_idx)){
+          if(all(is.na(input$M_idx), is.na(input$U_idx))){
+            showNotification("Missing coverage info but beta values are available.Code doesn't work!")
+            return()
+          } else {
+            showNotification("Estimating Coverage from M and U indexes. Code Works!")
+          }
+        } else if(!is.na(input$beta_idx) & !is.na(input$cov_idx)){
+            if(all(is.na(input$M_idx), is.na(input$U_idx))){
+              showNotification("Estimating M and U from coverage and beta values. Code Works!")
+              return()
+            }
         } else {
-          showNotification("Code works", type = "message")
-        }
+            showNotification("Code Works!")
+          }
+          
         
         
       })
@@ -147,13 +176,13 @@ codeGeneration <- function(id, label = "read_in"){
             cat( "                                strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ", cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
             cat( "                                synced_coordinates =", input$synced_coordinates, ", n_threads = ", input$n_threads )
             
-            if(is.null(input$Btn_GetFile)){
+            if(input$addsampleanno == F){
               cat( " ")
             }
             else {
               cat(", coldata = sample_anno ")
             }
-            cat(")\n meth")
+            cat(")\n meth\n")
             cat("\`\`\`\n")
             
             
@@ -167,7 +196,7 @@ codeGeneration <- function(id, label = "read_in"){
             cat( "files = bdg_files,\n")
             cat( "ref_cpgs = hg19_cpgs,\n")
             cat( "pipeline =", input$pipeline)
-            if(is.null(input$Btn_GetFile)){
+            if(is.na(input$Btn_GetFile)){
               cat( " )")
             }
             else {
@@ -188,7 +217,8 @@ codeGeneration <- function(id, label = "read_in"){
 
         
         read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
-
+        meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
+        
         sink(file = read_in_filePath())
         
         cat("---\n")
@@ -216,13 +246,13 @@ codeGeneration <- function(id, label = "read_in"){
         cat("\n")
         cat("\`\`\`\n")
         cat("\n")
-        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\`\`\`{r bdg_files, message=TRUE, warning=FALSE, include=FALSE}\n")
         cat("\n")
         cat( "# Files \n")
         cat("bdg_files <- ",paste(fileandpaths()), sep = "")
         cat("\n\n\`\`\`\n")
         cat("\n")
-        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\`\`\`{r CpG_reference, message=TRUE, warning=FALSE, include=FALSE}\n")
         cat("# CpG annotation\n
         hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
         cat("\n")
@@ -232,11 +262,11 @@ codeGeneration <- function(id, label = "read_in"){
         if(!is.null(input$Btn_GetFile)){
           cat(" \n")
         } else {
-          cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+          cat("\`\`\`{r sample_anno, message=TRUE, warning=FALSE, include=FALSE}\n")
           cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)\n", sep = "")
           cat("\`\`\`\n")
         }
-        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\`\`\`{r read_in, message=TRUE, warning=FALSE, include=FALSE}\n")
         if(input$pipeline == "NULL"){
           cat(" # Read bedgraph file \n")
           cat( "meth <- methrix::read_bedgraphs( files = bdg_files, ref_cpgs = hg19_cpgs,\n")
@@ -252,13 +282,13 @@ codeGeneration <- function(id, label = "read_in"){
           cat( "                                strand_idx =", ifelse(is.na(input$strand_idx), "NULL", input$strand_idx), ", cov_idx =", ifelse(is.na(input$cov_idx), "NULL", input$cov_idx), ",\n")
           cat( "                                synced_coordinates =", input$synced_coordinates, ", n_threads = ", input$n_threads )
           
-          if(is.null(input$Btn_GetFile)){
+          if(input$addsampleanno == F){
             cat( " ")
           }
           else {
             cat(", coldata = sample_anno ")
           }
-          cat(")\n meth")
+          cat(")\n meth \n")
           cat("\`\`\`\n")
           
           
@@ -267,13 +297,13 @@ codeGeneration <- function(id, label = "read_in"){
         else{
           
           
-          cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+          cat("\`\`\`{r read_in, message=TRUE, warning=FALSE, include=FALSE}\n")
           cat("\n# Reading bedGraph file\n
         methrix::read_bedgraphs( \n")
           cat( "files = bdg_files,\n")
           cat( "ref_cpgs = hg19_cpgs,\n")
-          cat( "pipeline =", input$pipeline)
-          if(!is.null(input$Btn_GetFile)){
+          cat( "pipeline = \"",input$pipeline,"\"")
+          if(!is.na(input$Btn_GetFile)){
             cat( " ")
           }
           else {
@@ -285,9 +315,10 @@ codeGeneration <- function(id, label = "read_in"){
         
         cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
         cat("\n")
-        cat("# Saving object in workflow")
-        cat("saveRDS(meth, \"./data=raw_methrix.RDS\" ")
+        cat("# Saving object in workflow\n")
+        cat("saveRDS(meth, \"",paste(meth_filePath()),"\")")
         cat("\n")
+        cat("\`\`\`\n")
         
         sink()
 

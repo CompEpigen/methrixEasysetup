@@ -57,14 +57,14 @@ preprocessServer <- function(id){
         
      
       
-      # reportDirectory <- reactive({normalizePath("docs/", winslash = "/")})
+      reportDirectory <- reactive({normalizePath("docs/", winslash = "/")})
       
       output$intialQC <- renderPrint ({
         
         
         cat("methrix::methrix_report(\n")
         cat("  meth = meth,\n")
-        # cat("  output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
+        cat("  output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
          cat(" prefix = \"initial\")")
          
       })
@@ -116,7 +116,7 @@ preprocessServer <- function(id){
         
         if(input$methrixreReport == TRUE){
           cat(" methrix::methrix_report(meth = meth,\n")
-          # cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
+          cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
           cat(" recal_stats = TRUE,\n")
           cat(" prefix=\"processed\")")
           
@@ -138,7 +138,7 @@ preprocessServer <- function(id){
       })
       
       preprocessDirectory <- reactive({normalizePath("analysis/preprocess.Rmd", winslash = "/")})
-
+      read_meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
       
       
       
@@ -159,7 +159,7 @@ preprocessServer <- function(id){
       
       cat("\n\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
       cat(" #Read RDS object")
-      cat(" meth <- readRDS(\"raw_methrix.RDS\" ")
+      cat(" meth <- readRDS(\"",paste(read_meth_filePath()),") ")
       cat("\n\`\`\`\n\n")
       
       cat("\n\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n
@@ -209,7 +209,7 @@ preprocessServer <- function(id){
      
       if(input$methrixreReport == TRUE){
         cat(" methrix::methrix_report(meth = meth,\n")
-        # cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
+        cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
         cat(" recal_stats = TRUE,\n")
         cat(" prefix=\"processed\")\n") 
         

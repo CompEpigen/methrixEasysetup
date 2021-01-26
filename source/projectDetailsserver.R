@@ -4,35 +4,37 @@ projectDetailsserver <- function(id){
     id,
     function(input, output,session){
       
-      observeEvent(input$tab1Next,{
-        if(!is.null(input$projectDirectory)){
-          showNotification("Please select the directory to create workflow files", type = "error")
-          return()
-        }
-      })
-      observe({  
-        if(!is.null(input$projectDirectory)){
-          # browser
-          volumes=getVolumes()
-          shinyDirChoose(input, 'projectDirectory', roots=c(home=getwd()))
-          req(input$projectDirectory)
-          home <- normalizePath(getwd(), winslash = "/")
-          directory <- renderText({
-            req(input$projectDirectory)
-            file.path(home, paste(unlist(input$projectDirectory$path[-1]), collapse = .Platform$file.sep))
-          })
-            workflowr::wflow_start(
-              directory = directory(),
-              name = input$projectName,
-              existing = TRUE,
-              overwrite = TRUE,
-              git = F)
-            output$paths <- renderPrint({
-              paste0(directory())
+      
+        observe({  
+          if(!is.null(input$projectDirectory)){
+            # browser
+            roots <- getVolumes()()
+            directory <- reactive ({
+              shinyDirChoose(input, 'projectDirectory', roots=roots, session = session, 
+                             restrictions = system.file(package = "base"))
+            return(parseDirPath(roots, input$projectDirectory))
             })
-        }
+            
+            wflowPath <- reactive({file.path(directory(), input$projectName)})
+            
+            # dir.create(file.path(directory(), input$projectName))
+            output$paths <- renderPrint({paste0(wflowPath())})
+            observeEvent(input$tab1Next,{
+              dir.create(file.path(directory(), input$projectName))
+            workflowr::wflow_start(
+              directory = wflowPath(),
+              name = input$projectName,
+              existing = T,
+              overwrite = F)
+              
+            })
+            
+          }
+          
+         
         
       })
+     
     }
   )
 }
