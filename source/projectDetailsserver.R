@@ -26,6 +26,9 @@ projectDetailsserver <- function(id){
               name = input$projectName,
               existing = T,
               overwrite = F)
+            updateTabsetPanel(session, 
+                              "mES1",
+                              selected = "readIn")
               
             })
             
