@@ -4,12 +4,7 @@ tabChangeserver <- function(id, label = label){
   moduleServer(id,
                function(input, output, session){
                  
-                 observeEvent(input$tab1Next,{
-                   updateTabsetPanel(session, 
-                                     "mES1",
-                                     selected = "readIn")
-                 })
-                 
+                
                  
                  observeEvent(input$tab2Previous,{
                    updateTabsetPanel(session,
@@ -23,8 +18,17 @@ tabChangeserver <- function(id, label = label){
                                      selected = "preprocess")
                  })
                  
+                 observeEvent(input$tab2Skip,{
+                   updateTabsetPanel(session,
+                                     "mES1",
+                                     selected = "preprocess")
+                 })
                  
-                 
+                 observeEvent(input$tab3Previous,{
+                   updateTabsetPanel(session,
+                                     "mES1",
+                                     selected = "readIn")
+                 })
                  
                  observeEvent(input$tab1Next,{
                    updateTabsetPanel(session, 

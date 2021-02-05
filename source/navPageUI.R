@@ -37,7 +37,7 @@ navPageUI <- function(id, label= label){
             title = "Preview of the first bedGraph file",
             solidHeader = TRUE,
             width = NULL,
-            status = "warning",
+            
             previewbedGraphInput("read_in")
           ),
           
@@ -46,14 +46,14 @@ navPageUI <- function(id, label= label){
             title = "Sample Annotation",
             solidHeader = TRUE,
             width = NULL,
-            status = "warning",
+            
             sampleAnnotationUI("read_in")
           ),
           box(
             title = "Generated Code",
             solidHeader = TRUE,
             width = NULL,
-            status = "warning",
+            
             readInCode ("read_in")
           )
         )

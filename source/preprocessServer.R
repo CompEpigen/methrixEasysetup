@@ -115,10 +115,18 @@ preprocessServer <- function(id){
       output$methrixReport <- renderPrint({
         
         if(input$methrixreReport == TRUE){
-          cat(" methrix::methrix_report(meth = meth,\n")
-          cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
-          cat(" recal_stats = TRUE,\n")
-          cat(" prefix=\"processed\")")
+          if(input$snpFiltering == TRUE){
+            cat("methrix::methrix_report(meth = meth$snp_filtered,\n")
+            cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
+            cat("    recal_stats = TRUE,\n")
+            cat("    prefix=\"processed\")\n") 
+          } else {
+            
+            cat("methrix::methrix_report(meth = meth,\n")
+            cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
+            cat("    recal_stats = TRUE,\n")
+            cat("    prefix=\"processed\")\n") 
+          }
           
         }
         
@@ -128,16 +136,21 @@ preprocessServer <- function(id){
       output$plotsafterfiltering <- renderPrint({
         
         if(input$plotsafterfilter == TRUE){
+          if(input$snpFiltering == TRUE){
+            cat("methrix::plot_coverage(m=meth$snp_filtered, type=\"dens\")\n")
+            #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
+            cat("methrix::plot_density(m=meth$snp_filtered)\n")
+          } else {
+            cat("methrix::plot_coverage(m=meth, type=\"dens\")\n")
+            #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
+            cat("methrix::plot_density(m=meth)\n")
+            #cat("#another functionality to be added") 
+          } }
           
-          cat("methrix::plot_coverage(m=meth. type=\"dens\"\n")
-          cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE \n")
-          cat("methrix::plot_density(m=meth)\n")
-          cat("#another functionality to be added")
-          
-        }
+        
       })
       
-      preprocessDirectory <- reactive({normalizePath("analysis/preprocess.Rmd", winslash = "/")})
+      preprocessDirectory <- reactive({normalizePath("analysis/02.preprocess.Rmd", winslash = "/")})
       read_meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
       
       
@@ -149,34 +162,54 @@ preprocessServer <- function(id){
 
       
       cat("---\n")
-      cat("title: ",input$projectName,"\n")
+      cat("title: \"preprocess\"\n")
       cat("author: ",input$authorName,"\n")
       cat("date: \'\`r format(Sys.time(), \"%d %B, %Y\")\`\'\n")
-      cat("output: workflowr::wflow_html\n")
+      cat("output:\n")
+      cat("    workflowr::wflow_html:\n")
+      cat("        toc: false\n")
+      cat("        code_folding: \"hide\"\n")
       cat("editor_options:\n")
-      cat("\t chunk_output_type: console\n")
+      cat("    chunk_output_type: console\n")
       cat("---\n")
       
-      cat("\n\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
-      cat(" #Read RDS object")
-      cat(" meth <- readRDS(\"",paste(read_meth_filePath()),") ")
+      cat("\n\`\`\`{r read_RDS, message=FALSE, warning=FALSE}\n")
+      cat(" #Read RDS object\n")
+      cat(" meth <- readRDS(\"./data/raw_methrix.RDS\") ")
       cat("\n\`\`\`\n\n")
       
-      cat("\n\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n
+      cat("\`\`\`{r lib_2, message=FALSE, warning=FALSE }\n
+        # Installing libraries\n")
+      cat("library(methrix)\n")
+      cat("library(data.table)\n")
+      cat("library(pheatmap)\n")
+      cat("\n")
+      cat("\`\`\`\n")
+      
+      cat("# Initial QC and summary\n")
+      cat(" Without any further processing, we can create an interactive html report containing basic summary statistics of the methrix object with methrix_report function. The report can also be accessed [here](initial_methrix_reports.html).\n")
+      
+      cat("\n\`\`\`{r meth_ini_report, message=FALSE, warning=FALSE}\n
         # Intial QC\n")
       cat("methrix::methrix_report(\n")
       cat("  meth = meth,\n")
-      cat("  output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
-      cat(" prefix = \"initial\")")
+      cat("  output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
+      cat("  prefix = \"initial\")\n")
       cat("\n\`\`\`\n\n")
       
-      cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n
+      cat("# Filtering\n")
+      cat("# Coverage based filtering\n")
+      cat("To ensure the high quality of our dataset, the sites with very low (untrustworthy methylation level) or high coverage (technical problem) should not be used. We can mask these CpG sites. Please note, that the DSS we were using for Differential Methylation Region (DMR) calling, doesn’t need the removal of the lowly covered sites, because it takes it into account by analysis. However, using a not too restrictive threshold won’t interfere with DMR calling.\n
+          Later we can remove those sites that are not covered by any of the samples.\n")
+      cat("\`\`\`{r mask_meth, message=FALSE, warning=FALSE}\n
         # Coverage Filtering\n")
+      
       if(input$mask_methrix == TRUE){
+        
         cat("meth <- methrix::mask_methrix(\n")
-        cat("meth,\n")
-        cat("low_count = ",input$lowcount,",\n")
-        cat("high_quantile = ",input$high_quantile,")")
+        cat("       meth,\n")
+        cat("       low_count = ",input$lowcount,",\n")
+        cat("       high_quantile = ",input$high_quantile,")\n")
         
       }
       
@@ -189,14 +222,15 @@ preprocessServer <- function(id){
         cat(" meth <- methrix::coverage_filter(\n")
         cat(" m=meth,\n")
         cat(" cov_thr =",input$cov_thr," ,\n")
-        cat(" min_samples = ",input$min_samples," )")
+        cat(" min_samples = ",input$min_samples," )\n")
       }
       
       cat("\n\`\`\`\n\n")
       
+      cat("# SNP filtering\n")
+      cat("SNPs, mostly the C > T mutations can disrupt methylation calling. Therefore it is essential to remove CpG sites that overlap with common variants, if we have variation in our study population. For example working with human, unpaired data, e.g. treated vs. untreated groups. During filtering, we can select the population of interest and the minimum minor allele frequency (MAF) of the SNPs. SNP filtering is currently implemented for hg19 and hg38 assemblies.\n")
       
-      
-      cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+      cat("\`\`\`{r SNP_filtering, message=FALSE, warning=FALSE}\n")
       
       if (input$snpFiltering == TRUE){
         cat("# SNP Filtering\n\n")
@@ -205,26 +239,48 @@ preprocessServer <- function(id){
       
       cat("\n\`\`\`\n\n")
       
-      cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+      cat("# Visualization and QC after filtering\n")
+      cat("# Methrix report\n")
+      cat("After filtering, it worth running a report again, to see if any of the samples were so lowly covered that it warrants an action (e.g. removal of the sample). The report can also be accessed [here](processed_methrix_reports.html)\n")
+      cat("There are additional possibilities to visualize the study. We can look at the density of coverage both sample- and group-wise.\n")
+      
+      cat("\`\`\`{r meth_rereport, message=FALSE, warning=FALSE}\n")
      
       if(input$methrixreReport == TRUE){
-        cat(" methrix::methrix_report(meth = meth,\n")
-        cat(" output_dir = \"", paste0(reportDirectory()),"\",\n", sep = ""   )
-        cat(" recal_stats = TRUE,\n")
-        cat(" prefix=\"processed\")\n") 
+        if(input$snpFiltering == TRUE){
+          cat("methrix::methrix_report(meth = meth$snp_filtered,\n")
+          cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
+          cat("    recal_stats = TRUE,\n")
+          cat("    prefix=\"processed\")\n") 
+        } else {
+        
+        cat("methrix::methrix_report(meth = meth,\n")
+        cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
+        cat("    recal_stats = TRUE,\n")
+        cat("    prefix=\"processed\")\n") 
+        }
         
       }
       
       if(input$plotsafterfilter == TRUE){
-        
-        cat("methrix::plot_coverage(m=meth. type=\"dens\"\n
-              methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE \n
-              methrix::plot_density(m=meth)\n
-              #another functionality to be added") }
+        if(input$snpFiltering == TRUE){
+          cat("methrix::plot_coverage(m=meth$snp_filtered, type=\"dens\")\n")
+          #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
+          cat("methrix::plot_density(m=meth$snp_filtered)\n")
+        } else {
+        cat("methrix::plot_coverage(m=meth, type=\"dens\")\n")
+        #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
+        cat("methrix::plot_density(m=meth)\n")
+        #cat("#another functionality to be added") 
+        } }
       
       cat("\n\`\`\`\n\n")
       
       })
-    }
+    observeEvent(input$finish,{
+      stopApp()
+    })
+      
+      }
   )
 }

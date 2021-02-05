@@ -6,6 +6,8 @@ library(rintrojs)
 library(shinyBS)
 library(magrittr)
 library(shinyhelper)
+library(workflowr)
+library(R.utils)
 
 
 

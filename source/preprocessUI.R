@@ -10,7 +10,7 @@ preprocessUI <- function(id){
       width =4 ,
       box(
         width = NULL,
-        title = "Intial QC",
+        title = "Step 1: Intial QC",
         verbatimTextOutput(
           outputId = ns("intialQC")
           )
@@ -18,7 +18,7 @@ preprocessUI <- function(id){
       
       box(
         width = NULL,
-        title = "Visualization and QC after filtering",
+        title = "Step 3: Visualization and QC after filtering",
         h4("Methrix Report"),
         verbatimTextOutput(ns("methrixReport")),
         h4("Plots after filtering"),
@@ -30,7 +30,7 @@ preprocessUI <- function(id){
       width=4,
       box(
         width = NULL,
-        title = "Filtering",
+        title = "Step 2: Filtering",
         h4("Coverage based filtering"),
         h5("Mask Methrix"),
         verbatimTextOutput(ns("maskMethrixCode")),

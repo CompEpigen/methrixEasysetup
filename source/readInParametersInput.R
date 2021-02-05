@@ -9,7 +9,7 @@ readInParametersInput <- function (id, label = label){
     title = "Parameters",
     solidHeader = TRUE,
     width = NULL,
-    status = "warning",
+    
   
   tagList(
     

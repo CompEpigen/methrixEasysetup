@@ -22,6 +22,16 @@ codeGeneration <- function(id, label = "read_in"){
         )
       })
       
+      observeEvent(input$projectDirectory,{
+        req(input$tab1Next)
+        read_in_filePath <- reactive({normalizePath("analysis/01.read_in.Rmd", winslash = "/")})
+        if(file.exists(read_in_filePath())){
+          shinyjs::enable("tab2Skip")
+        } else {
+          shinyjs::disable("tab2Skip")
+        }
+      })
+      
       observeEvent(input$pipeline,{
         if(input$pipeline == "NULL"){
           shinyjs::enable("zerobased")
@@ -102,7 +112,7 @@ codeGeneration <- function(id, label = "read_in"){
             if(all(is.na(input$M_idx), is.na(input$U_idx))){
               showNotification("Estimating M and U from coverage and beta values. Code Works!")
               return()
-            }
+            } 
         } else {
             showNotification("Code Works!")
           }
@@ -140,7 +150,7 @@ codeGeneration <- function(id, label = "read_in"){
         readInCode1 <- reactive({
           cat( "# Files \n")
         cat("bdg_files <- ",paste(fileandpaths()), sep = "")
-          
+        cat("\nsaveRDS(meth,\"",paste0(meth_filePath()),"\")")  
         })
         
         output$generatedCode1 <- renderPrint({
@@ -182,8 +192,8 @@ codeGeneration <- function(id, label = "read_in"){
             else {
               cat(", coldata = sample_anno ")
             }
-            cat(")\n meth\n")
-            cat("\`\`\`\n")
+            cat(")\nmeth\n")
+            
             
             
           }
@@ -213,60 +223,73 @@ codeGeneration <- function(id, label = "read_in"){
       })
       
       observeEvent(input$tab2Next,{
+        volumes <- getVolumes()
+        if(!is.null(input$Btn_GetFile)){
+          sampleannoFile <- parseFilePaths(volumes, input$Btn_GetFile)
+          sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
+        }
         
-
-        
-        read_in_filePath <- reactive({normalizePath("analysis/read_in.Rmd", winslash = "/")})
+        read_in_filePath <- reactive({normalizePath("analysis/01.read_in.Rmd", winslash = "/")})
         meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
+        index_filePath <- reactive({normalizePath("analysis/index.Rmd")})
+        
+        sink(file = index_filePath(), append = TRUE)
+        
+        cat("[Reading in bedGraph files](01.read_in.html)\n\n")
+        cat("[Pre-processing of bedGraph files](02.preprocess.html)\n\n")
+        cat("[Summary of methrix report](initial_methrix_reports.html)\n\n")
         
         sink(file = read_in_filePath())
         
         cat("---\n")
-        cat("title: ",input$projectName,"\n")
+        cat("title: \"read_in\"\n")
         cat("author: ",input$authorName,"\n")
         cat("date: \'\`r format(Sys.time(), \"%d %B, %Y\")\`\'\n")
-        cat("output: workflowr::wflow_html\n")
+        cat("output:\n")
+        cat("    workflowr::wflow_html:\n")
+        cat("        toc: false\n")
+        cat("        code_folding: \"hide\"\n")
         cat("editor_options:\n")
-        cat("\t chunk_output_type: console\n")
+        cat("    chunk_output_type: console\n")
         cat("---\n")
         cat("\n")
-        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n
+        cat("\`\`\`{r lib_1, message=FALSE, warning=FALSE }\n
         # Installing libraries\n")
         cat("library(methrix)\n")
         cat("library(data.table)\n")
-        cat("library(shinyFiles)\n")
-        cat("library(shinyDashboard)\n")
-        cat("library(dmrseq)\n")
-        cat("library(DSS)\n")
-        cat("library(rGREAT)\n")
-        cat("library(rtracklayer)\n")
-        cat("library(Gviz)\n")
-        cat("library(biomaRt)\n")
         cat("library(pheatmap)\n")
         cat("\n")
         cat("\`\`\`\n")
         cat("\n")
-        cat("\`\`\`{r bdg_files, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("# bedGraph file paths\n")
+        cat("This command lists the bedgraph file paths based on the input from the user.\n\n")
+        cat("\`\`\`{r bdg_files, message=FALSE, warning=FALSE}\n")
         cat("\n")
         cat( "# Files \n")
         cat("bdg_files <- ",paste(fileandpaths()), sep = "")
         cat("\n\n\`\`\`\n")
         cat("\n")
-        cat("\`\`\`{r CpG_reference, message=TRUE, warning=FALSE, include=FALSE}\n")
+        
+        cat("# CpG annotation\n")
+        cat("The CpG sites are extracted using the respective Bsgenome annotation package. The read_bedgraph function is also able to extract CpG sites on it’s own, however, it might be beneficial to do it separately.\n\n")
+        cat("\`\`\`{r CpG_reference, message=FALSE, warning=FALSE}\n")
         cat("# CpG annotation\n
-        hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
+        #hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
+        cat("\n hg19_cpgs <- readRDS(\"C:/Users/sivan/Desktop/01-02/Sivanesan/docs/hg19.RDS\")")
         cat("\n")
         cat("\`\`\`\n")
         cat("\n")
         
-        if(!is.null(input$Btn_GetFile)){
+        cat("# Reading bedGraph files\n")
+        cat("read_bedgraphs() function is a versatile bedgraph reader intended to import bedgraph files generated virtually by any sort of methylation calling program. It requires user to provide indices for column containing chromosome names, start position and other required fields.\n\n")
+        if(input$addsampleanno == FALSE){
           cat(" \n")
         } else {
-          cat("\`\`\`{r sample_anno, message=TRUE, warning=FALSE, include=FALSE}\n")
+          cat("\`\`\`{r sample_anno, message=FALSE, warning=FALSE}\n")
           cat("sample_anno <- read.csv(\"",paste(sampleannoFilePath()),"\" ,sep = \",\", header = TRUE)\n", sep = "")
           cat("\`\`\`\n")
         }
-        cat("\`\`\`{r read_in, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\n\`\`\`{r read_in, message=FALSE, warning=FALSE}\n")
         if(input$pipeline == "NULL"){
           cat(" # Read bedgraph file \n")
           cat( "meth <- methrix::read_bedgraphs( files = bdg_files, ref_cpgs = hg19_cpgs,\n")
@@ -297,26 +320,26 @@ codeGeneration <- function(id, label = "read_in"){
         else{
           
           
-          cat("\`\`\`{r read_in, message=TRUE, warning=FALSE, include=FALSE}\n")
+          cat("\`\`\`{r read_in, message=FALSE, warning=FALSE}\n")
           cat("\n# Reading bedGraph file\n
         methrix::read_bedgraphs( \n")
           cat( "files = bdg_files,\n")
           cat( "ref_cpgs = hg19_cpgs,\n")
           cat( "pipeline = \"",input$pipeline,"\"")
-          if(!is.na(input$Btn_GetFile)){
+          if(input$addsampleanno == F){
             cat( " ")
           }
           else {
-            cat(",\n coldata = sample_anno")
+            cat(", coldata = sample_anno ")
           }
           cat(")")
           cat("\`\`\`\n")
         }
         
-        cat("\`\`\`{r libraries, message=TRUE, warning=FALSE, include=FALSE}\n")
+        cat("\`\`\`{r save_obj, message=FALSE, warning=FALSE}\n")
         cat("\n")
         cat("# Saving object in workflow\n")
-        cat("saveRDS(meth, \"",paste(meth_filePath()),"\")")
+        cat("saveRDS(meth,\"./data/raw_methrix.RDS\")")
         cat("\n")
         cat("\`\`\`\n")
         

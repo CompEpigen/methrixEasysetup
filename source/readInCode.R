@@ -14,6 +14,11 @@ readInCode <- function(id){
         label = "Previous",
         icon = icon("arrow-left")
       ),
+      actionButton(
+        inputId = ns("tab2Skip"),
+        label = "Skip",
+        icon = icon("arrow-right")
+      ),
      
       actionButton(
         inputId = ns("tab2Next"),

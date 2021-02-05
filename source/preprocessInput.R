@@ -71,6 +71,12 @@ preprocessInput <- function(id){
     actionButton(
       inputId = ns("code2"),
       label = "Generate Code"
-    )
+    ),
+    
+    actionButton(inputId = ns("tab3Previous"),
+                 label = "Previous",
+                 icon = icon("arrow-left")),
+    actionButton(inputId = ns("finish"),
+                 label = "completed!")
   )
 }
