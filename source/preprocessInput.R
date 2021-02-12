@@ -76,7 +76,8 @@ preprocessInput <- function(id){
     actionButton(inputId = ns("tab3Previous"),
                  label = "Previous",
                  icon = icon("arrow-left")),
-    actionButton(inputId = ns("finish"),
-                 label = "completed!")
+    actionButton(inputId = ns("tab3Next"),
+                 label = "Next",
+                 icon = icon("arrow-right"))
   )
 }

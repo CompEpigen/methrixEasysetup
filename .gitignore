@@ -37,3 +37,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+R.Rmd
+hey.R
+read_in_filePath.txt
+source/siva
+

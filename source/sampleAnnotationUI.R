@@ -20,7 +20,7 @@ sampleAnnotationUI <- function(id){
                          "2. Make sure the sample annotation is filed alpha-numeric wise since the bedGraph files will be added in an alphabetically."),
              size = "s"),
     actionButton(ns("addsampleanno"),
-                 "Add Sampe annotation to analysis"),
+                 "Add Sample annotation to analysis"),
     
     tableOutput(
       outputId = ns("sampleannoTable")

@@ -150,7 +150,7 @@ preprocessServer <- function(id){
         
       })
       
-      preprocessDirectory <- reactive({normalizePath("analysis/02.preprocess.Rmd", winslash = "/")})
+      preprocessDirectory <- reactive({normalizePath("analysis/02_preprocess.Rmd", winslash = "/")})
       read_meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
       
       
@@ -234,7 +234,8 @@ preprocessServer <- function(id){
       
       if (input$snpFiltering == TRUE){
         cat("# SNP Filtering\n\n")
-        cat("meth <- methrix::remove_snps(m = meth, keep = TRUE)")
+        cat("meth <- methrix::remove_snps(m = meth, keep = TRUE)\n")
+        cat(" meth <- meth[[1]]")
       }
       
       cat("\n\`\`\`\n\n")
@@ -247,39 +248,35 @@ preprocessServer <- function(id){
       cat("\`\`\`{r meth_rereport, message=FALSE, warning=FALSE}\n")
      
       if(input$methrixreReport == TRUE){
-        if(input$snpFiltering == TRUE){
-          cat("methrix::methrix_report(meth = meth$snp_filtered,\n")
-          cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
-          cat("    recal_stats = TRUE,\n")
-          cat("    prefix=\"processed\")\n") 
-        } else {
+       
         
         cat("methrix::methrix_report(meth = meth,\n")
         cat("    output_dir = \"",paste0(reportDirectory()),"\",\n", sep = ""   )
         cat("    recal_stats = TRUE,\n")
         cat("    prefix=\"processed\")\n") 
-        }
+        
         
       }
       
       if(input$plotsafterfilter == TRUE){
-        if(input$snpFiltering == TRUE){
-          cat("methrix::plot_coverage(m=meth$snp_filtered, type=\"dens\")\n")
-          #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
-          cat("methrix::plot_density(m=meth$snp_filtered)\n")
-        } else {
+        
         cat("methrix::plot_coverage(m=meth, type=\"dens\")\n")
         #cat("methrix::pot_coverage(m=meth, type= \"dens\", pheno= \"Day\", perGroup = TRUE) \n")
         cat("methrix::plot_density(m=meth)\n")
         #cat("#another functionality to be added") 
-        } }
+        } 
       
       cat("\n\`\`\`\n\n")
       
+      
+      cat("\`\`\`{r save_obj_2, message=FALSE, warning=FALSE}\n")
+      cat("\n")
+      cat("# Saving object in workflow\n")
+      cat("saveRDS(meth,\"./data/processed_methrix.RDS\")")
+      cat("\n")
+      cat("\`\`\`\n")
       })
-    observeEvent(input$finish,{
-      stopApp()
-    })
+    
       
       }
   )

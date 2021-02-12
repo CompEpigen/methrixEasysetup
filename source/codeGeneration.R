@@ -150,7 +150,7 @@ codeGeneration <- function(id, label = "read_in"){
         readInCode1 <- reactive({
           cat( "# Files \n")
         cat("bdg_files <- ",paste(fileandpaths()), sep = "")
-        cat("\nsaveRDS(meth,\"",paste0(meth_filePath()),"\")")  
+         
         })
         
         output$generatedCode1 <- renderPrint({
@@ -229,7 +229,7 @@ codeGeneration <- function(id, label = "read_in"){
           sampleannoFilePath <- renderText(as.character(sampleannoFile$datapath))
         }
         
-        read_in_filePath <- reactive({normalizePath("analysis/01.read_in.Rmd", winslash = "/")})
+        read_in_filePath <- reactive({normalizePath("analysis/01_read_in.Rmd", winslash = "/")})
         meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
         index_filePath <- reactive({normalizePath("analysis/index.Rmd")})
         
@@ -336,7 +336,7 @@ codeGeneration <- function(id, label = "read_in"){
           cat("\`\`\`\n")
         }
         
-        cat("\`\`\`{r save_obj, message=FALSE, warning=FALSE}\n")
+        cat("\n\`\`\`{r save_obj, message=FALSE, warning=FALSE}\n")
         cat("\n")
         cat("# Saving object in workflow\n")
         cat("saveRDS(meth,\"./data/raw_methrix.RDS\")")

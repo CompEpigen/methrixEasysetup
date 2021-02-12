@@ -61,7 +61,7 @@ navPageUI <- function(id, label= label){
     ),
     
     tabPanel(
-      "Preprocessing, Normalization and QC",
+      "Preprocessing and Filtering",
       value = "preprocess",
       fluidRow(
         column(
@@ -71,6 +71,24 @@ navPageUI <- function(id, label= label){
           )
         ),
         preprocessUI("read_in")
+        
+        
+      )     
+    ),
+    
+    tabPanel(
+      "Differencial methylation calling",
+      value = "dm_calling",
+      fluidRow(
+        column(
+          width = 3,
+          box( width = NULL,
+               dm_callingInput("read_in")
+          )
+        ),
+        
+        dmcallingUI("read_in")
+        
         
         
       )     

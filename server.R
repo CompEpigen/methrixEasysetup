@@ -8,6 +8,7 @@ server <-   function(input, output, session){
   sampleAnnotationserver("read_in")
   preprocessServer("read_in")
   tabChangeserver("read_in")
+  dmcallingserver("read_in")
   
   observe_helpers(withMathJax = TRUE)
   

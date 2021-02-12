@@ -3,9 +3,8 @@ tabChangeserver <- function(id, label = label){
   
   moduleServer(id,
                function(input, output, session){
-                 
                 
-                 
+                
                  observeEvent(input$tab2Previous,{
                    updateTabsetPanel(session,
                                      "mES1",
@@ -36,21 +35,17 @@ tabChangeserver <- function(id, label = label){
                                      selected = "readIn")
                  })
                  
-                 
-                 
-                 
-                 
-                 
-                 observeEvent(input$tab2Previous,{
-                   updateTabsetPanel(session,
+                 observeEvent(input$tab3Next,{
+                   updateTabsetPanel(session, 
                                      "mES1",
-                                     selected = "start")
+                                     selected = "dm_calling")
                  })
                  
-                 observeEvent(input$tab2Next,{
-                   updateTabsetPanel(session,
+                 observeEvent(input$tab4Previous,{
+                   updateTabsetPanel(session, 
                                      "mES1",
                                      selected = "preprocess")
                  })
+                 
                })
 }

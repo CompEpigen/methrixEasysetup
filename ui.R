@@ -1,3 +1,4 @@
+library(shiny)
 library(shinydashboard)
 library(shinyFiles)
 library(data.table)
@@ -28,7 +29,9 @@ source('./source/sampleAnnotationUI.R')
 source('./source/sampleAnnotationserver.R')
 source('./source/navPageUI.R')
 source('./source/tabChangeserver.R')
-
+source('./source/dm_callingInput.R')
+source('./source/dmcallingUI.R')
+source('./source/dmcallingserver.R')
 
 ui <- dashboardPage(
   dashboardHeader(
