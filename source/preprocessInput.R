@@ -70,7 +70,7 @@ preprocessInput <- function(id){
     
     actionButton(
       inputId = ns("code2"),
-      label = "Generate Code"
+      label = "Preview Code"
     ),
     
     actionButton(inputId = ns("tab3Previous"),

@@ -150,6 +150,11 @@ preprocessServer <- function(id){
         
       })
       
+      })
+      
+      observeEvent(input$tab3Next,{
+        
+      
       preprocessDirectory <- reactive({normalizePath("analysis/02_preprocess.Rmd", winslash = "/")})
       read_meth_filePath <- reactive({normalizePath("data/raw_methrix.RDS", winslash = "/")})
       

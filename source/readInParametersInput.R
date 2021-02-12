@@ -222,7 +222,7 @@ readInParametersInput <- function (id, label = label){
            
            actionButton(
              inputId = ns("code"),
-             label = "Generate Code"
+             label = "Preview Code"
            )
            
            

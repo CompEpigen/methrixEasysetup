@@ -17,7 +17,7 @@ dm_callingInput <- function(id){
     actionButton(
       inputId = ns("tab4previous"),
       label = "Previous",
-      icon = icon("left-arrow")
+      icon = icon("arrow-left")
     ),
     actionButton(
       inputId = ns("save_close"),

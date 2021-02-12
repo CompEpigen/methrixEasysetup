@@ -97,6 +97,10 @@ dmcallingserver <- function(id, label = label){
       cat("heatmap_data <- heatmap_data[complete.cases(heatmap_data),]\n")
       cat("pheatmap::pheatmap(mat = head(heatmap_data[,-(1:5)], 50), show_rownames = F, annotation_col = as.data.frame(meth@colData), fontsize = 8)\n")
       cat("\n\`\`\`\n\n")
+      
+      sink()
+      
+      stopApp()
             })
     }
   )
