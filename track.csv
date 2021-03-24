@@ -1,0 +1,4 @@
+"seqnames","start","end","width","strand","source","type","score","phase","group"
+"1","chr21",1000000,1011000,11001,"+","TeleGene","enhancer",500,NA,"touch1"
+"2","chr22",1010000,1010100,101,"+","TeleGene","promoter",900,NA,"touch1"
+"3","chr22",1020000,1020000,1,"-","TeleGene","promoter",800,NA,"touch2"

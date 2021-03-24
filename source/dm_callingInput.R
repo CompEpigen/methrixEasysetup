@@ -9,6 +9,9 @@ dm_callingInput <- function(id){
       inputId = ns("dmcalling"),
       label = "Perform DM calling"
     ),
+    uiOutput(ns("grouping")),
+    uiOutput(ns("group1")),
+    uiOutput(ns("group2")),
     uiOutput(ns("heatmap_dm")),
     actionButton(
       inputId = ns("previewCode3"),

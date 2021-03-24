@@ -5,7 +5,14 @@ preprocessInput <- function(id){
   ns <- NS(id)
   
   tagList(
-    
+    checkboxInput(
+       ns("initial_report"),
+       "Initial report"
+    ) %>%
+      helper(type = "inline",
+             title = "Initial Methrix",
+             content = c(" Initial report before filtering or any pre-processing will be generated."),
+             size = "s"),
     h5("Coverage based filtering"),
     checkboxInput(
       ns("mask_methrix"),

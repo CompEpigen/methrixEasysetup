@@ -24,7 +24,20 @@ sampleAnnotationserver <- function(id){
             
             read.csv(file = sampleannoFilePath(), sep = ",", header = T)
             
+            
+            # group_choices <- reactive({read.csv(file = sampleannoFilePath(), sep = ",", header = T)})
+
+            # output$group1 <- renderUI(
+            #   selectInput(
+            #     inputId = ns("group1_dmc"),
+            #     label = "Group 1",
+            #     selected = NULL,
+            #     choices = group_choices()
+            #   )
+            # )
           })
+          
+          
           
           output$generatedCode3 <- renderPrint({
             req(input$Btn_GetFile)

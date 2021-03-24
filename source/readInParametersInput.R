@@ -34,6 +34,51 @@ readInParametersInput <- function (id, label = label){
                     content = c("Choose a pipeline for reading in the bedgraph files. Choose NULL to manually enter other parameters. ",
                                 "<b>Note:</b> For different pipeline other than null, there is a specific format that is required. "),
                     size = "s"),
+           numericInput(
+             inputId = ns("chr_idx"),
+             label = "Chromosome column",
+             value = NULL,
+             min = 1,
+             max = 100
+           ) %>%
+             helper(type = "inline",
+                    title = "Chromosome index",
+                    content = c(" Give the column number which contains the information about the chromosome numbers."),
+                    size = "s"),
+           
+           numericInput(
+             inputId = ns("M_idx"),
+             label = "Methylated counts column ",
+             value = NULL ,
+             min = 1,
+             max = 100
+           ) %>%
+             helper(type = "inline",
+                    title = "Methylated counts column",
+                    content = c(" Give the column number which contains the information regarding thr read counts supporting methylation",
+                                "Note: Only few accepted combinations are allowed which are:",
+                                "* Methylated and Unmethylated counts column",
+                                "* Methylated counts and Coverage column ",
+                                "* Unmethylated counts and Coverage column ",
+                                "* beta values and coverage column "),
+                    size = "s"),
+           numericInput(
+             inputId = ns("beta_idx"),
+             label = "Beta value column ",
+             value = NULL,
+             min = 1,
+             max = 100
+           ) %>%
+             helper(type = "inline",
+                    title = "Beta value column",
+                    content = c(" Give the column number which contains the information about the beta values.",
+                                "Note: Only few accepted combinations are allowed which are:",
+                                "* Methylated and Unmethylated counts column",
+                                "* Methylated counts and Coverage column ",
+                                "* Unmethylated counts and Coverage column ",
+                                "* beta values and coverage column "),
+                    size = "s"),
+          
            
            uiOutput(
              outputId = ns("reference_cpgs")
@@ -58,51 +103,11 @@ readInParametersInput <- function (id, label = label){
                     size = "s"),
            
            
-           numericInput(
-             inputId = ns("chr_idx"),
-             label = "Chromosome column",
-             value = NULL,
-             min = 1,
-             max = 100
-           ) %>%
-             helper(type = "inline",
-                    title = "Chromosome index",
-                    content = c(" Give the column number which contains the information about the chromosome numbers."),
-                    size = "s"),
            
-           numericInput(
-             inputId = ns("beta_idx"),
-             label = "Beta value column ",
-             value = NULL,
-             min = 1,
-             max = 100
-           ) %>%
-             helper(type = "inline",
-                    title = "Beta value column",
-                    content = c(" Give the column number which contains the information about the beta values.",
-                                "Note: Only few accepted combinations are allowed which are:",
-                                "* Methylated and Unmethylated counts column",
-                                "* Methylated counts and Coverage column ",
-                                "* Unmethylated counts and Coverage column ",
-                                "* beta values and coverage column "),
-                    size = "s"),
            
-           numericInput(
-             inputId = ns("M_idx"),
-             label = "Methylated counts column ",
-             value = NULL ,
-             min = 1,
-             max = 100
-           ) %>%
-             helper(type = "inline",
-                    title = "Methylated counts column",
-                    content = c(" Give the column number which contains the information regarding thr read counts supporting methylation",
-                                "Note: Only few accepted combinations are allowed which are:",
-                                "* Methylated and Unmethylated counts column",
-                                "* Methylated counts and Coverage column ",
-                                "* Unmethylated counts and Coverage column ",
-                                "* beta values and coverage column "),
-                    size = "s"),
+           
+           
+           
            
     ),
     
@@ -150,11 +155,7 @@ readInParametersInput <- function (id, label = label){
                                 "* Unmethylated counts and Coverage column ",
                                 "* beta values and coverage column "),
                     size = "s"),
-           checkboxInput(
-             inputId = ns("synced_coordinates"),
-             label = "Are the start and end coordinates of a stranded bedgraph are synchronized between + and - strands?",
-             value = F
-           ),
+           
            numericInput(
              inputId = ns("cov_idx"),
              label = "Coverage column",
@@ -170,7 +171,12 @@ readInParametersInput <- function (id, label = label){
                                 "* Methylated counts and Coverage column ",
                                 "* Unmethylated counts and Coverage column ",
                                 "* beta values and coverage column "),
-                    size = "s")
+                    size = "s"),
+           checkboxInput(
+             inputId = ns("synced_coordinates"),
+             label = "Are the start and end coordinates of a stranded bedgraph are synchronized between + and - strands?",
+             value = F
+           )
     ),
     
     column(width = 4,

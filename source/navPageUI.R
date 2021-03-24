@@ -61,7 +61,7 @@ navPageUI <- function(id, label= label){
     ),
     
     tabPanel(
-      "Preprocessing and Filtering",
+      " QC and Reports",
       value = "preprocess",
       fluidRow(
         column(
@@ -77,7 +77,7 @@ navPageUI <- function(id, label= label){
     ),
     
     tabPanel(
-      "Differencial methylation calling",
+      "Differential methylation calling",
       value = "dm_calling",
       fluidRow(
         column(

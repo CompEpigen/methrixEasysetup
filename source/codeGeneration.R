@@ -69,7 +69,7 @@ codeGeneration <- function(id, label = "read_in"){
       observeEvent(input$validate,{
         
         if(is.na(input$chr_idx) | is.na(input$start_idx)){
-          showNotification("Give proper Chromosome and Start indexes")
+          showModal(modalDialog("Give proper Chromosome and Start indexes"))
           return()
         } else if (length(which(duplicated(c( 
           ifelse(is.na(input$chr_idx), 100, input$chr_idx),
@@ -80,41 +80,43 @@ codeGeneration <- function(id, label = "read_in"){
           ifelse(is.na(input$M_idx), 105, input$M_idx),
           ifelse(is.na(input$U_idx), 106, input$U_idx), 
           ifelse(is.na(input$cov_idx), 107, input$cov_idx))))) > 0){
-          showNotification("Duplicated Index\n The code doesn't work.")
+          showModal(modalDialog("Duplicated Index\n The code doesn't work."))
           return()
         } else if(all(is.na(input$beta_idx) , is.na(input$cov_idx))){
           if(is.na(input$M_idx) | is.na(input$U_idx)){
-            showNotification("Missing beta or coverage values.\nU and M are not available either!\nCode doesn't work")
+            showModal(modalDialog("Missing beta or coverage values.\nU and M are not available either!\nCode doesn't work"))
             return()
+          } else {
+            showModal(modalDialog("Code works!"))
           }
         } else if(is.na(input$beta_idx) & !is.na(input$cov_idx)){
           if(all(is.na(input$M_idx), is.na(input$U_idx))){
-            showNotification("Missing beta values but coverage info available.\nEither U or M are required for estimating beta values!\nCode doesn't work")
+            showModal(modalDialog("Missing beta values but coverage info available.\nEither U or M are required for estimating beta values!\nCode doesn't work"))
             return()
           } else if (all(!is.na(input$M_idx), !is.na(input$U_idx))){
-              showNotification("Estimating beta values from M and U\n Code Works")
+            showModal(modalDialog("Estimating beta values from M and U\n Code Works"))
               return()
             } else if (!is.na(input$M_idx)){
-              showNotification("Estimating beta values from M and coverage\n Code Works")
+              showModal(modalDialog("Estimating beta values from M and coverage\n Code Works"))
               return()
             } else if(!is.na(input$U_idx)){
-              showNotification("Estimating beta values from U and coverage\n Code works")
+              showModal(modalDialog("Estimating beta values from U and coverage\n Code works"))
               return()
-            }
+            } 
         } else if(!is.na(input$beta_idx) & is.na(input$cov_idx)){
           if(all(is.na(input$M_idx), is.na(input$U_idx))){
-            showNotification("Missing coverage info but beta values are available.Code doesn't work!")
+            showModal(modalDialog("Missing coverage info but beta values are available.Code doesn't work!"))
             return()
           } else {
-            showNotification("Estimating Coverage from M and U indexes. Code Works!")
+            showModal(modalDialog("Estimating Coverage from M and U indexes. Code Works!"))
           }
         } else if(!is.na(input$beta_idx) & !is.na(input$cov_idx)){
             if(all(is.na(input$M_idx), is.na(input$U_idx))){
-              showNotification("Estimating M and U from coverage and beta values. Code Works!")
+              showModal(modalDialog("Estimating M and U from coverage and beta values. Code Works!"))
               return()
             } 
         } else {
-            showNotification("Code Works!")
+          showModal(modalDialog("Code Works!"))
           }
           
         
@@ -223,6 +225,11 @@ codeGeneration <- function(id, label = "read_in"){
       })
       
       observeEvent(input$tab2Next,{
+        
+        if ( input$addsampleanno == F){
+          showModal(modalDialog("Sample annotation required for Differential methylation calling"))
+          return()
+        } else {
         volumes <- getVolumes()
         if(!is.null(input$Btn_GetFile)){
           sampleannoFile <- parseFilePaths(volumes, input$Btn_GetFile)
@@ -235,9 +242,12 @@ codeGeneration <- function(id, label = "read_in"){
         
         sink(file = index_filePath(), append = TRUE)
         
-        cat("[Reading in bedGraph files](01.read_in.html)\n\n")
-        cat("[Pre-processing of bedGraph files](02.preprocess.html)\n\n")
-        cat("[Summary of methrix report](initial_methrix_reports.html)\n\n")
+        cat("\n[Reading in bedGraph files](01_read_in.html)\n\n")
+        cat("[Pre-processing of bedGraph files](02_preprocess.html)\n\n")
+        cat("[Summary of initial methrix report](initial_methrix_reports.html)\n\n")
+        cat("[Summary of processed methrix report](processed_methrix_reports.html)\n\n")
+        cat("[Differential Methylation Calling](03_dm_calling.html)\n\n")
+        cat("[Annotation of Differentially methylated regions and Visualization](04_anno_visualization.Rmd)\n\n")
         
         sink(file = read_in_filePath())
         
@@ -274,8 +284,8 @@ codeGeneration <- function(id, label = "read_in"){
         cat("The CpG sites are extracted using the respective Bsgenome annotation package. The read_bedgraph function is also able to extract CpG sites on it’s own, however, it might be beneficial to do it separately.\n\n")
         cat("\`\`\`{r CpG_reference, message=FALSE, warning=FALSE}\n")
         cat("# CpG annotation\n
-        #hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
-        cat("\n hg19_cpgs <- readRDS(\"C:/Users/sivan/Desktop/01-02/Sivanesan/docs/hg19.RDS\")")
+        hg19_cpgs <- methrix::extract_CPGs(ref_genome =\"",input$in_reference_cpgs,"\")\n", sep = "" )
+        cat("\n #hg19_cpgs <- readRDS(\"C:/Users/sivan/Desktop/01-02/Sivanesan/docs/hg19.RDS\")")
         cat("\n")
         cat("\`\`\`\n")
         cat("\n")
@@ -344,7 +354,7 @@ codeGeneration <- function(id, label = "read_in"){
         cat("\`\`\`\n")
         
         sink()
-
+        }
       })
     }
   )

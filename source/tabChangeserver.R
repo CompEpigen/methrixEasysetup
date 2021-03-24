@@ -12,6 +12,7 @@ tabChangeserver <- function(id, label = label){
                  })
                  
                  observeEvent(input$tab2Next,{
+                   req(input$addsampleanno)
                    updateTabsetPanel(session,
                                      "mES1",
                                      selected = "preprocess")
