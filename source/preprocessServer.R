@@ -37,7 +37,7 @@ preprocessServer <- function(id){
             tagList(
               numericInput(
                 inputId = ns("cov_thr"),
-                label = "Co-variance",
+                label = "Minimum Coverage",
                 value = 5,
                 min = 0,
                 max = 1000
