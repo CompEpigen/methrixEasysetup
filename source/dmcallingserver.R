@@ -108,9 +108,30 @@ dmcallingserver <- function(id, label = label){
         if( input$regional_annotation == T){
           
           output$dmcode4 <- renderPrint({
+            
+            cat("# Number and Size of DMRs")
+            cat("dmrs <- makeGRangesFromDataFrame(dmrs, keep.extra.columns =TRUE)\n")
+            cat("count <- c(\"Higher in", paste0(input$group1)," \" = length(dmrs[dmrs$diff.Methy<0,]),
+           \"Higher in", paste0(input$group2)," \" = length(dmrs[dmrs$diff.Methy>0,])) \n
+           length <- c(\"Higher in", paste0(input$group1)," \" = sum(width(dmrs[dmrs$diff.Methy<0,])), 
+            \"Higher in", paste0(input$group2)," \" = sum(width(dmrs[dmrs$diff.Methy<0,]))) \n")
+            cat("data <- data.frame(Direction=c(\"Gain\", \"Loss\"), Count=count, Length=length)\n")
+            cat("g <- ggplot(data=data)+geom_col(aes(x=factor(1), y=Count, fill=Direction), position = \"dodge\")+theme_bw()+theme(axis.title.x = element_blank(), axis.text.x = element_blank())+scale_fill_brewer(palette = \"Dark2\")+ggtitle(\"Number of differentially methylated regions\")+scale_y_continuous(labels = comma)\n")
+            cat("ggplotly(g)\n")
+            
+            cat("# Regional Annotation \n")
             cat("peakAnnoList <- lapply(list(\"group1\"=dmrs[dmrs$diff.Methy<0,],\"group2\" = dmrs[dmrs$diff.Methy>0,]), annotatePeak, TxDb=txdb, tssRegion=c(-3000, 3000), 
                 verbose=FALSE)\n")
             cat("ChIPseeker::plotAnnoBar(peakAnnoList)\n")
+            
+            cat("# Visualizing DMRs\n")
+            cat("# Heatmap of DMR\n")
+            cat("Top 50 DMRs are shown in the heatmap\n")
+            
+            cat("heatmap_data <- as.data.frame(methrix::get_region_summary(meth, makeGRangesFromDataFrame(dmrs)))\n")
+            cat("heatmap_data <- heatmap_data[complete.cases(heatmap_data),]\n")
+            cat("pheatmap::pheatmap(mat = head(heatmap_data[,-(1:5)], 50), show_rownames = F, annotation_col = as.data.frame(meth@colData), fontsize = 8)\n")
+            
             })
         }
         
